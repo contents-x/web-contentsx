@@ -293,15 +293,40 @@ with sync_playwright() as p:
     page.mouse.click(st['x'] + st['width'] * .75, st['y'] + st['height'] / 2)
     page.wait_for_timeout(150)
     assert page.locator('.cxmr-count').inner_text() == '3-4 / 5'
+    # 「拡大」: the reader covers the whole screen (like biz-library); the button stays visible.
+    small = rect(page, '.cxmr-stage')
+    y_before = page.evaluate('scrollY')
     page.locator('.cxmr-zoom').click()
+    page.wait_for_timeout(200)
     assert page.locator('.cxmr-zoom').get_attribute('aria-pressed') == 'true'
-    assert page.locator('.cxmr-stage').evaluate("e=>e.classList.contains('is-zoomed') && e.scrollWidth > e.clientWidth")
+    full = rect(page, '.cxmr')
+    assert full['left'] == 0 and full['top'] == 0 and full['width'] == 1440 and full['height'] == 900, full
+    big = rect(page, '.cxmr-stage')
+    assert big['height'] > small['height'] * 1.3, (small, big)
+    assert page.locator('.cxmr').evaluate("e=>e.parentElement===document.body && e.getAttribute('role')==='dialog'")
+    assert page.evaluate("getComputedStyle(document.documentElement).overflow") == 'hidden'
+    zb = rect(page, '.cxmr-zoom')
+    assert page.evaluate('([x,y])=>!!document.elementFromPoint(x,y).closest(".cxmr-zoom")', [zb['left'] + zb['width'] / 2, zb['top'] + zb['height'] / 2]), 'close button visible on top'
+    assert page.locator('.cxmr-zoom').evaluate('e=>getComputedStyle(e).backgroundColor') != 'rgb(255, 255, 255)'
+    assert page.locator('.cxmr-count').inner_text() == '3-4 / 5'
+    st = page.locator('.cxmr-stage').bounding_box()
+    page.mouse.click(st['x'] + st['width'] * .25, st['y'] + st['height'] / 2)
+    page.wait_for_timeout(150)
+    assert page.locator('.cxmr-count').inner_text() == '5 / 5', 'pages still turn while enlarged'
+    page.keyboard.press('Escape')
+    page.wait_for_timeout(200)
+    assert page.locator('.cxmr-zoom').get_attribute('aria-pressed') == 'false'
+    assert page.locator('.cxcx-panel .cxmr').count() == 1 and page.locator('.cxmr-placeholder').count() == 0, 'back in its place'
+    assert page.evaluate("getComputedStyle(document.documentElement).overflow") != 'hidden'
+    assert abs(page.evaluate('scrollY') - y_before) < 2
+    assert page.evaluate("document.activeElement.classList.contains('cxmr-zoom')")
     # Leaving and coming back resets the reader.
     switch(page, 'bizanime')
     switch(page, 'manga')
     page.wait_for_selector('.cxmr.is-ready')
     assert page.locator('.cxmr-count').inner_text() == '1-2 / 5'
     assert page.locator('.cxmr-zoom').get_attribute('aria-pressed') == 'false'
+    assert page.locator('body > .cxmr').count() == 0 and page.evaluate("getComputedStyle(document.documentElement).overflow") != 'hidden'
     # The cards are links in the HTML; with JS a plain click switches the viewer instead of leaving the page.
     assert page.locator('.cxcx-card').first.evaluate('e=>e.tagName') == 'A'
     assert page.url.rstrip('/') == args.url.rstrip('/')

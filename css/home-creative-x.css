@@ -141,16 +141,12 @@
 .cxmr-stage { position:relative; display:flex; align-items:center; justify-content:center; height:var(--cxcx-manga-h); overflow:hidden; border-radius:12px; background:#111a33; touch-action:pan-y; }
 /* Pages turn on click (left half = next, right half = previous): show it with the cursor. */
 .cxmr-stage.is-spread,.cxmr-stage.is-single { cursor:pointer; }
-.cxmr-stage.is-zoomed { cursor:grab; }
 .cxmr-spread { display:flex; justify-content:center; height:100%; }
 .cxmr-page { display:block; height:100%; width:auto; max-width:100%; object-fit:contain; background:#fff; }
 .cxmr-stage.is-spread .cxmr-page { max-width:50%; }
 .cxmr-page.is-broken { min-width:120px; background:#2a3654; }
 .cxmr-stage.is-vertical { display:block; overflow-y:auto; overscroll-behavior:contain; }
 .cxmr-stage.is-vertical .cxmr-page { width:min(100%,520px); height:auto; margin:0 auto; }
-.cxmr-stage.is-zoomed { display:block; overflow:auto; touch-action:pan-x pan-y; }
-.cxmr-stage.is-zoomed .cxmr-spread { height:200%; width:max-content; min-width:100%; }
-.cxmr-stage.is-zoomed.is-vertical .cxmr-page { width:min(200%,1040px); }
 .cxmr-bar { position:relative; display:flex; align-items:center; justify-content:center; gap:16px; min-height:64px; }
 .cxmr-btn { display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid rgba(255,255,255,.3); border-radius:50%; background:rgba(255,255,255,.06); color:#fff; font-size:24px; line-height:1; cursor:pointer; }
 .cxmr-btn:disabled { opacity:.35; cursor:default; }
@@ -158,7 +154,13 @@
 .cxmr-btn span { margin-top:-2px; }
 .cxmr-count { min-width:88px; font-family:Inter,Arial,sans-serif; font-size:14px; letter-spacing:.06em; text-align:center; }
 .cxmr-zoom { position:absolute; right:4px; min-height:44px; padding:0 16px; border:1px solid rgba(255,255,255,.3); border-radius:999px; background:transparent; color:#fff; font:inherit; font-size:13px; font-weight:700; cursor:pointer; }
-.cxmr-zoom[aria-pressed="true"] { background:#fff; color:#07143b; }
+/* 「拡大」: the reader covers the whole screen (moved to <body> by js/cx-manga-reader.js), like
+   BizManga's biz-library reader. The page behind does not scroll while it is open. */
+html.cxmr-lock { overflow:hidden; }
+.cxmr.is-full { position:fixed; inset:0; z-index:100000; display:flex; flex-direction:column; gap:0; padding:clamp(12px,2vw,28px); background:#060d22; color:#fff; }
+.cxmr.is-full .cxmr-stage { flex:1 1 auto; height:auto; min-height:0; border-radius:8px; background:transparent; }
+.cxmr.is-full .cxmr-stage.is-vertical .cxmr-page { width:min(100%,760px); }
+.cxmr.is-full .cxmr-zoom { z-index:2; }
 .cxmr-status { position:absolute; inset:0 0 76px; display:grid; place-items:center; padding:20px; color:#dbe4f3; font-size:14px; text-align:center; pointer-events:none; }
 .cxmr-status:empty { display:none; }
 .cxmr.is-error .cxmr-stage,.cxmr.is-error .cxmr-bar { visibility:hidden; }
