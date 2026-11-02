@@ -78,9 +78,9 @@ i18n.js → nav.js の順序が必須。トップを含む全ページで共通�
 ⛔ このフォルダを削除すると、旧URL `contentsx.jp/bizmanga/*` を踏んだ訪問者が404に飛ぶ。**削除厳禁。**
 
 ## 制作事例モーダル（旧トップの記録。2026-09-29撤去）
-> ⚠️ 下の `hero-new.js`・`js/data/works-detail.js` はどのページからも読み込まれていない（記録として残すだけ。HERO作業の完了後に削除予定）。
-- データ: `js/data/works-detail.js`（22+作品、WORKS_DETAIL_DATA配列）。⚠️ 2026-10-13 から `wp-api.js` は `/works` を取得しない（戻すなら取得も戻す）
-- 表示: `hero-new.js` の `openWorkDetail()` でモーダル表示
+> ⚠️ 下の `hero-new.js`・`js/data/works-detail.js` は 2026-10-29 にファイルごと削除した（どのページからも読まれていないのに公開され、非公開にした作品のデータが残っていた。戻すなら git の履歴から。`wp-api.js` は 2026-10-13 から `/works` を取得しないので、戻すなら取得も戻す）。以下は記録。
+- データ: `js/data/works-detail.js`（WORKS_DETAIL_DATA配列）／表示: `hero-new.js` の `openWorkDetail()` でモーダル表示
+- 非公開にした作品は素材フォルダ（`material/manga/{id}/`）からも消す（2026-10-27〜29 に4作品を削除。ルート BUGS.md #085）。素材の画像を消す前に BizManga も含めて参照を grep する（BUGS #020）
 - カルーセル: 1ページ目の縦横比で縦読み(vertical-scroll)/カルーセル切替
 - タイトル+カテゴリタグ: `.work-detail-title-row` でflexbox横並び（BizMangaと同仕様）
 
