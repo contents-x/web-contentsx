@@ -195,7 +195,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 
 - どのmdを更新するかは [../docs/MD-UPDATE-ROUTING.md](../docs/MD-UPDATE-ROUTING.md) を参照。
 - ContentsX の変更 → [SPEC.md](SPEC.md) または [CLAUDE.md](CLAUDE.md)。
-- バグ修正・再発防止 → ルートの [BUGS.md](../BUGS.md) に1行追加。
+- バグ修正・再発防止 → ルートの [BUGS.md](../BUGS.md) の索引に1行、本文はルートの `docs/bugs/` の分野別ファイルに追記（手順は BUGS.md 末尾）。
 
 PRテンプレートのチェックリストにこの項目が入っています。
 
