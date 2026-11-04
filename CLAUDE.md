@@ -49,7 +49,7 @@ i18n.js → nav.js の順序が必須。トップを含む全ページで共通�
 
 | ページ | ファイル | 主要JS |
 |--------|---------|--------|
-| トップ | index.html | i18n.js, nav.js, wp-api.js, home-2026.js, hero-about.js, home-hero.js, home-section-labels.js, cx-dom.js, cx-manga-reader.js, cx-video-player.js, home-creative-x.js, home-topics.js, hubspot-lazy.js（共通ヘッダーを使用。Creative X はWPのビューワー動画・マンガ作品をページ内のビューワーで表示、TOPICS はWP「Contents X ＞ TOPICS」から描画。仕様は SPEC.md §3） |
+| トップ | index.html | i18n.js, nav.js, wp-api.js, home-2026.js, hero-about.js, home-hero.js, home-section-labels.js, cx-dom.js, cx-manga-reader.js, cx-video-player.js, home-creative-x.js, home-topics.js, hubspot-lazy.js（共通ヘッダーを使用。Creative X はWPのビューワー動画・マンガ作品をページ内のビューワーで表示、TOPICS はWP「サイトの表示 ＞ ContentsX ＞ トップページ」の TOPICS の枠から描画（2026-11-04 保管庫へ移行）。仕様は SPEC.md §3） |
 | サービス一覧・事業群・個別詳細 | services/ | i18n.js, nav.js, service-media.js, sitewide-motion.js（`tools/build-services.py` で生成。仕様は SPEC.md §3。⚠️ 生成スクリプト・テンプレート・`data/services.json` を変えたら、マージ前に `python3 -m unittest discover -s tests -p test_build_services.py` を通す。Pages のデプロイも同じ検査で、落ちると本番に出ない＝BUGS #065） |
 | 会社概要 | company.html | script.js, dl-modal.js, hubspot-lazy.js |
 | ContentsXについて | about.html | i18n.js, nav.js, sitewide-motion.js |
