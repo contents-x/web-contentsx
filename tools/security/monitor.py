@@ -45,7 +45,7 @@ from urllib.parse import quote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = json.loads((ROOT / "tools" / "security" / "expected.json").read_text(encoding="utf-8"))
-UA = "ContentsX-SecurityMonitor/1.0 (+https://github.com/josawa2255/ContentsX_HP)"
+UA = "ContentsX-SecurityMonitor/1.0 (+https://github.com/contents-x/web-contentsx)"
 TEXT_EXT = {".html", ".css", ".js", ".xml", ".txt", ".json"}
 DNS_QUERIES = [
     ("contentsx.jp", "NS"), ("contentsx.jp", "A"), ("contentsx.jp", "AAAA"), ("contentsx.jp", "MX"),

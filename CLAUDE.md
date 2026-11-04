@@ -1,14 +1,14 @@
 # ContentsX HP (contentsx.jp) — Claude Code 引き継ぎ資料
 
 ## リポジトリ
-- GitHub: `josawa2255/ContentsX_HP` — **PUBLIC**
+- GitHub: `contents-x/web-contentsx` — **PUBLIC**（2026-11 に `josawa2255/ContentsX_HP` から組織へ移管・改名。DNS の `www` は `contents-x.github.io`）
 - デプロイ先: GitHub Pages → contentsx.jp
 - DNS: お名前.com
 - Git運用・レビューとマージ許可: [github.md](github.md)（リポジトリ所有者本人の確認による例外を含む）
 
 > ⚠️ **WPプラグイン(PHP)はこのリポジトリにありません**（2026-08-04 分離）。
 > マスターは `~/Documents/contentX/web/contentsx-wp-plugin/contentsx-cms/contentsx-cms.php`
-> （GitHub: **PRIVATE** `josawa2255/contentsx-wp-plugin`）。
+> （GitHub: **PRIVATE** `contents-x/contentsx-wp-plugin`）。
 > このリポジトリがPUBLICのため、サーバー側で動くコードは置かない方針。
 > 旧 `wordpress/contentsx-cms/` は削除済み（`wordpress/SETUP.md` のみ残置）。
 > **push では本番反映されない** → お名前.comで手動アップロード（BUGS #002）。

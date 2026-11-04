@@ -1,7 +1,7 @@
 # ContentsX 仕様書
 
 **ドメイン**: contentsx.jp
-**リポジトリ**: [josawa2255/ContentsX_HP](https://github.com/josawa2255/ContentsX_HP)
+**リポジトリ**: [contents-x/web-contentsx](https://github.com/contents-x/web-contentsx)（2026-11 に josawa2255/ContentsX_HP から移管・改名）
 **デプロイ**: GitHub Pages（CNAME: お名前.com）
 **最終更新**: 2026-10-07
 
