@@ -167,13 +167,13 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
 - ビズマンガ（`js/cx-manga-reader.js`）: ページ内で読めるマンガビューワー。BizManga の読み方の規則を写している（BizManga のJSは読み込まず、BizManga 側は変更しない）。右綴じで、PC（769px以上）は見開き [1,2],[3,4]… の若い番号が右、最終ページが奇数なら左に `/material/manga/thanks_v02.webp`。768px以下は1ページずつ。`view_type` が `vertical_only` / `vertical`、または1ページ目の縦横比が1.8超なら縦スクロール表示。1ページ目が読み込めないときは BizManga と同じく「縦読みではない」として表示を続ける。判定は BizManga の `bm-view-type.js` を読み込まずに写している（別サイトのため）ので、BizManga 側の判定を変えたら `js/cx-manga-reader.js` も合わせる。「次へ」は左・「前へ」は右、←キー＝次・→キー＝前、スワイプは左へ＝次。ページの上をクリック（スマホはタップ）すると、左半分＝次・右半分＝前（ボタンと同じ向き。2026-10-14 平澤さん指示。拡大中と縦読みでは無効）。ページ番号表示。「拡大」を押すと、ビズ書庫の読み方と同じく漫画が画面全体に広がる（ページ全体を覆う濃紺の画面。後ろのページはスクロールしない。めくり方は同じ。「閉じる」・Escで元の位置に戻る。2026-10-14 平澤さん指示で、枠の中で2倍にする以前の拡大から変更）。ページは切り取らない（`object-fit: contain`）。PCではページを枠の高さいっぱいに使い、ボタン類は左右の余白に重ねる。
 - ビズアニメ / ビズビデオ（`js/cx-video-player.js`）: 共通の動画プレイヤー。各3本を横一列に並べ、横スクロール（SPは指でスワイプ、PCはトラックパッド・左右端の ‹ › ボタン・←→キー）で1本ずつ切り替える（2026-10-09 平澤さん指示で下のサムネイル列は廃止）。動画は枠の横幅いっぱいに16:9で表示し、上部の点で何本目かを示す（再生中は隠す）。最初はポスター・タイトル・説明と再生ボタンだけで、押すとその場で埋め込みを作って再生（自動再生しない）。別の動画へスクロール・別サービスを選ぶと埋め込みを外して止める。読み込み中・再生できないときは文字で知らせる。高画質サムネイル（maxresdefault）が無い動画は YouTube の灰色の代わり画像になるため、標準サイズ（hqdefault）に切り替える。
 - データ（`js/home-creative-x.js`、`WP_CONFIG.apiBase` 経由）:
-  - 動画: `GET /bizanime-videos` の `viewer`（WPプラグイン「ビズアニメ・ビズビデオ動画」＞「CREATIVE X ビューワー動画」。種別・タイトル・説明・URL・ポスター・表示ON/OFF・並び順）。種別ごとに再生できるものを先頭から3本。ビューワー動画が未登録の種別は、ビズアニメは `playlists` のビズアニメ分 → 既存の `cases`（単体動画）、ビズビデオは `playlists` のビズビデオ分で代用する。
+  - 動画: `GET /bizanime-videos` の `viewer`（2026-11-04 保管庫へ移行済み。動画は WP管理画面「共有の素材 ＞ 動画」に1本ずつ登録し、出す動画と順番は「サイトの表示 ＞ ContentsX ＞ トップページ」の枠「Creative X ビューワー」「Creative X 作品カード」で決める。動画の編集画面の「表示する場所」からも出し入れできる。API の形は移行前と同じ）。種別ごとに再生できるものを先頭から3本。ビューワー動画が未登録の種別は、ビズアニメは `playlists` のビズアニメ分 → 既存の `cases`（単体動画）、ビズビデオは `playlists` のビズビデオ分で代用する。
   - マンガ: `GET /works?site=contentsx`（「ContentsX新作情報に表示」＝掲載可否、`cx_sort_order`＝表示順）のうち、ページ画像（`gallery`）を持つ先頭の作品。
   - 埋め込みURLはフロントで検証済みIDから組み立てる（YouTube は `youtube-nocookie.com/embed/{id}`、プレイリストは `embed/videoseries?list=`、Google ドライブは `drive.google.com/file/d/{id}/preview`、mp4 は `<video>`）。APIの `embed` は使わない。画像は `cms.contentsx.jp` / `contentsx.jp` / `i.ytimg.com` の https とサイト内パスのみ。文字は textContent で入れ、HTMLとして解釈しない。
 - 大きさ: ビューワー内の高さはビューワーの横幅から決める（コンテナ単位。`--cxcx-view-h` = 横幅×9/16。上限はPCが画面の高さ−340px、タブレット・SPが画面の高さ−140px）。動画は横幅いっぱい、マンガの枠も同じ高さなので、切り替えても枠の高さは変わらない。SPのマンガは縦長（横幅×1.25、画面の高さの70%まで）。高さ860px以下のPCは上の余白とカード画像を低くする。ノートPC（1366×650〜1920×1080）ではカードまで1画面に収まり、高さ800px以上なら動画は枠の横幅いっぱい。それより低い画面では高さの上限で動画が少し小さくなる（YouTube側で左右に黒帯）。
 - 状態: データ取得中は「読み込み中…」。取得に失敗したら「動画（漫画）を読み込めませんでした」、データが無ければ「準備中です」と出し、どちらも各サービスへのリンクを添える（動画とマンガは別々に判定）。JS無効・WP設定が無効のときは `index.html` の静的な表示（I eye のポスターとビズアニメへのリンク、3カードは各サービスへのリンク）が残る。
 - CSSは `css/home-creative-x.css`、検証は `python3 tests/test_creative_x.py --url <loopback preview> --artifacts <output>`（WP応答と画像をフィクスチャに置換。19幅の並び・横はみ出し・文字1.4倍、タブ操作・キーボード、動画の非自動再生・停止・埋め込みURL・XSS・不正URL、マンガの見開き順・サンクスページ・キー操作・拡大・リセット・SPスワイプ・縦読み、切替でビューワーの高さが変わらない、動画の横スクロール・‹ ›・←→とスクロールで前の動画が止まること、ノートPC8サイズでカードまで1画面・高さ800px以上は動画が横幅いっぱい、スナップ、ビューワー動画未登録時、取得中・取得失敗時、動き軽減、JS無効）。
-- WP側は別リポジトリ `contentsx-wp-plugin` の `contentsx-cms/bizanime-videos.php`（プレイリストは 2026-10-03 本番反映。ビューワー動画の欄・REST `viewer` は Issue #97 で追加）。
+- WP側は別リポジトリ `contentsx-wp-plugin` の `contentsx-cms/bizanime-videos.php`（プレイリストは 2026-10-03 本番反映。ビューワー動画の欄・REST `viewer` は Issue #97 で追加）。2026-11-04 に保管庫（`library/video.php`）と掲載枠（`placement/`）へ移行し、`/bizanime-videos` は枠の中身から移行前と同じ形で組み立てている。
 
 ### Sales X セクション（Issue #67、画像＋ホバー型カード Issue #104）
 
@@ -203,12 +203,12 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
 - 位置: SERVICE（サービス一覧 `#about`）の直後、`#topics`。SERVICE に `.cxsb-join-next`、TOPICS に `.cxsb-join-prev` を付け、共通背景を継ぎ目なく続ける。上部に薄い大きな `TOPICS`。PCのスナップ対象。NEWS（`#news`）はこの後ろ（間に会社紹介）。
 - 見出し: 「TOPICS ——」「Contents X を、もっと知る。」。PCは右上に前後の丸い矢印（1枚ずつ移動。端・全件が収まるときは押せない表示）。SP（768px以下）は矢印なしの横スワイプで、次のカードが少し見える（1枚82%）。
 - カード: サムネイル（16:9）/ 種別（英大文字、MESSAGE・VIDEO・PRESS・COLUMN・CASE など自由）/ 日付 / タイトル（2行まで）/ タグ（#付き）。PCは3枚横並び、4枚目以降は横に並び矢印で送る。hover は画像1.02倍・矢印3px右・タイトルを青に。カード全体がリンクで、サイト内は同じタブ（→）、外部（YouTube・PR TIMES等）は新しいタブ（↗、読み上げに「外部サイトが開きます」）。
-- データ（`js/home-topics.js`）: `GET /contentsx/v1/topics`（WPプラグイン「Contents X ＞ TOPICS」、`contentsx-cms/contentsx-topics.php`）。表示ONのみ、PICK UP を先頭に、あとは管理画面の並び順。リンクは `/` 始まりのサイト内パスか http(s)、画像は `cms.contentsx.jp` / `contentsx.jp` / `i.ytimg.com` の https かサイト内パスのみ、日付は実在する日付のみ表示。文字は textContent。
+- データ（`js/home-topics.js`）: `GET /contentsx/v1/topics`（2026-11-04 保管庫へ移行済み。記事は WP管理画面「共有の素材 ＞ トピック」に1件ずつ登録し、出す記事・順番・PICK UP は「サイトの表示 ＞ ContentsX ＞ トップページ」の枠「TOPICS」で決める。API の形は移行前と同じ。`contentsx-cms/library/topic.php`・`contentsx-topics.php`）。表示ONのみ、PICK UP を先頭に、あとは管理画面の並び順。リンクは `/` 始まりのサイト内パスか http(s)、画像は `cms.contentsx.jp` / `contentsx.jp` / `i.ytimg.com` の https かサイト内パスのみ、日付は実在する日付のみ表示。文字は textContent。
 - 初期3件（`index.html` に同じ内容を JS無効・取得失敗時の表示として記載）: MESSAGE 2026-09-29「代表メッセージ｜全国で見てきたあの光景を、一社ずつ変えていきたい。」→ `/message` / VIDEO 2026-08-11 マクニカ対談（YouTube `w_O3iaQKduQ`）/ PRESS 2026-08-31 KIRINZ との共同創業（PR TIMES）。サムネイルは `material/home-2026/topics/topics-message-kuromiya.webp`（代表写真を16:9に切り出し）、YouTube の自動サムネイル、`topics-press-kirinz.webp`（リリース画像の中段のコマを切り出し）。
 - 採用ページ（`/recruit`）でも同じ部品を使う（SPEC §9.6）。フォールバックの3件を変えたら recruit.html も揃える。
 - TOPICSはNEWSと別のセクション。代表メッセージ本文は独立ページ `/message` へ接続（§14参照）。
 - WPプラグインのアップロード前確認（2026-10-07）: TOPICSの `contentsx-topics.php` と `contentsx-cms.php` の読み込み行はプラグインのmainに取り込み済み。お名前.comへ `contentsx-cms.php` をアップロードする前に、必ずプラグイン側の最新mainを取り込み、TOPICSの読み込み行と参照先ファイルがそろっていることを確認する。古い作業ブランチのファイルで上書きしない。アップロード対象PHPは `php -l` で構文チェックする。
-- 項目の追加・変更（2026-10-08 追記）: WP管理画面「Contents X ＞ TOPICS」で行う。REST の `POST /contentsx/v1/topics`（要 edit_posts）でもできるが、**一覧を丸ごと置き換える**仕様で、公開の GET は表示ONの項目しか返さない。GET の結果に足して POST すると、管理画面で表示OFFにしている項目が消えるので、表示OFFの項目が無いことを確かめてから使う。VIDEO の画像はYouTubeのURLから自動で補われるので、保存し直すときは空のまま送る。
+- 項目の追加・変更（2026-11-04 更新）: WP管理画面「共有の素材 ＞ トピック」で記事を作り、「サイトの表示 ＞ ContentsX ＞ トップページ」の TOPICS の枠に入れる（記事の編集画面の「表示する場所」からも入れられる）。旧画面「ContentsX のデータ ＞ TOPICS」は案内だけになり、旧 REST の `POST /contentsx/v1/topics` は 409 を返す（旧データには書かない）。旧画面に戻すときは WP「ツール ＞ 保管庫への移行」の切り戻し。VIDEO の画像はYouTubeのURLから自動で補われる。
 - 反映の遅れ: `cms.contentsx.jp` の nginx が API応答を最大10分キャッシュする（`s-maxage=600`）。`Vary: Origin` のため、ブラウザからの取得（Origin付き）は curl 等とは別のキャッシュになり、curl で新しい値が見えてもトップの表示は最大10分古いまま。確認は時間を置くか、`Origin: https://contentsx.jp` を付けた取得で行う。
 - CSSは `css/home-topics.css`、検証は `python3 tests/test_topics.py --url <loopback preview> --artifacts <output>`（WP応答をフィクスチャに置換。15幅、位置と背景、カードの項目、リンク、hover、矢印、不正データ、取得失敗時、ノートPCで1画面、スナップ、動き軽減、JS無効）。
 
@@ -513,7 +513,7 @@ WordPress 側の保守などで止めたいときに、**`js/wp-config.js` の `
 - ページ専用CTAなので `data-cx-page-cta` を付け、フッター上の営業向け相談導線は出さない。
 
 ### 9.6 TOPICS（トップと共通）
-- `index.html` の TOPICS と同じマークアップ・`css/home-topics.css`・`js/home-topics.js`・`js/wp-config.js`・`css/home-sections.css`（共通背景）。記事はトップと同じ WordPress「Contents X ＞ TOPICS」（WP側の更新が両ページに出る）。PCの横スクロールと矢印、スマホの横スワイプ、ホバー・登場演出もトップと同じ部品のまま。⚠️ JS無効・取得失敗時の3件は `index.html` と同じ内容に揃える。
+- `index.html` の TOPICS と同じマークアップ・`css/home-topics.css`・`js/home-topics.js`・`js/wp-config.js`・`css/home-sections.css`（共通背景）。記事はトップと同じ WordPress の TOPICS の枠（「サイトの表示 ＞ ContentsX ＞ トップページ」。WP側の更新が両ページに出る）。PCの横スクロールと矢印、スマホの横スワイプ、ホバー・登場演出もトップと同じ部品のまま。⚠️ JS無効・取得失敗時の3件は `index.html` と同じ内容に揃える。
 - 採用ページ側の調整は `css/recruit.css` に限定する: TOPICS 上端のグラデーションを共通背景の最後と同じ淡い青（#f2f7fd）から始め、`top: -1px` で、上端が小数ピクセルのときに固定背景（`.cxsb-backdrop`）が線のように覗くのを防ぐ。トップ用のファイルは変更しない。カードに `position: relative` を指定し、画面外カード内の読み上げ用テキストがページ全体の横幅を広げる不具合を防ぐ（#129）。
 - ローカル（localhost）では WordPress の CORS で記事が取れず、フォールバックの3件が出る（本番ドメインでは取得できる）。
 
