@@ -4,7 +4,7 @@
 >
 > `contentsx-cms.php` のマスターソースは **別のPRIVATEリポジトリ**へ移設しました。
 >
-> **https://github.com/josawa2255/contentsx-wp-plugin**（`contentsx-cms/contentsx-cms.php`）
+> **https://github.com/contents-x/contentsx-wp-plugin**（`contentsx-cms/contentsx-cms.php`）
 >
 > - **理由**: このリポジトリ（ContentsX_HP）は**PUBLIC**。サイト本体は静的HTMLなので公開して問題ないが、
 >   サーバー側で実行されるコードを公開する必然性がないため
