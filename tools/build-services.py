@@ -147,8 +147,8 @@ def render_directory_card(service: dict, index: int) -> str:
     coming_soon = service_id in COMING_SOON
     video = GROUP_VIDEOS.get(service_id)
     if video:
-        video_src, caption_src, title = video
-        visual = (f'<button class="cxg-video-play" type="button" data-video-src="{esc(video_src)}" '
+        video_src, caption_src, title = video[:3]
+        visual = (f'<button class="cxg-video-play" type="button" {video_slot_attrs(video)}data-video-src="{esc(video_src)}" '
                   f'data-caption-src="{esc(caption_src)}" aria-label="{esc(title)}を音声付きで再生">'
                   f'<img src="{esc(image)}" alt=""{dimensions} loading="lazy">'
                   '<span class="cxg-video-play__icon" aria-hidden="true">▶</span>'
@@ -219,17 +219,25 @@ GROUP_IMAGE_SIZES = {
     "bizmanga": (1407, 2000), "bizanime": (1280, 720), "bizvideo": (1280, 720),
 }
 COMING_SOON = {"bizaio", "bizkarte"}
+# (動画, 字幕, 読み上げの名前, WordPress の枠, 枠の動画に差し替えたときの読み上げの前置き)
+# 枠（「サイトの表示 → ContentsX → サービスページ」）に動画が入っていれば js/service-media.js が差し替える。空ならこの動画のまま（2026-11-07）
 GROUP_VIDEOS = {
-    "bizanime": ("/material/service-2026/bizanime-ieye.mp4", "/material/service-2026/bizanime-ieye.ja.vtt", "ビズアニメ制作事例「I eye」"),
-    "bizvideo": ("/material/service-2026/bizvideo-memory-town.mp4", "/material/service-2026/bizvideo-memory-town.ja.vtt", "ビズビデオ制作事例「私を置いて、記憶だけ残った街」"),
+    "bizanime": ("/material/service-2026/bizanime-ieye.mp4", "/material/service-2026/bizanime-ieye.ja.vtt", "ビズアニメ制作事例「I eye」",
+                 "cx-services-bizanime", "ビズアニメ制作事例"),
+    "bizvideo": ("/material/service-2026/bizvideo-memory-town.mp4", "/material/service-2026/bizvideo-memory-town.ja.vtt", "ビズビデオ制作事例「私を置いて、記憶だけ残った街」",
+                 "cx-services-bizvideo", "ビズビデオ制作事例"),
 }
+
+
+def video_slot_attrs(video: tuple) -> str:
+    return f'data-wp-slot="{esc(video[3])}" data-wp-label="{esc(video[4])}" '
 
 
 def render_landing_visual(service: dict, image: str | None, dimensions: str) -> str:
     video = GROUP_VIDEOS.get(service["id"])
     if video:
-        video_src, caption_src, title = video
-        return (f'<button class="cxg-video-play" type="button" data-video-src="{video_src}" data-caption-src="{caption_src}" '
+        video_src, caption_src, title = video[:3]
+        return (f'<button class="cxg-video-play" type="button" {video_slot_attrs(video)}data-video-src="{video_src}" data-caption-src="{caption_src}" '
                 f'aria-label="{esc(title)}を音声付きで再生">'
                 f'<img src="{esc(image)}" alt=""{dimensions} loading="lazy">'
                 '<span class="cxg-video-play__icon" aria-hidden="true">▶</span>'
