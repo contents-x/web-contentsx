@@ -14,8 +14,8 @@
 | ページ | ファイル | 主要JS | 説明 |
 |---|---|---|---|
 | トップ | `index.html` | i18n.js, wp-api.js, home-2026.js | 2026年9月版。X字の都市ビジュアル、Sales X / Creative X、支援の流れ、サービス、会社紹介、既存News（写真付きの相談CTAは2026-10-08に撤去し、共通フッター上部の小さな導線に置き換え）。CSSは `css/home-2026.css`。ヘッダーは一時撤去 |
-| サービス一覧 | `services/index.html` | i18n.js, nav.js, service-media.js | Creative X / Sales Xの事業紹介とサービス一覧。動画はページ内再生 |
-| Sales X / Creative X | `services/sales-x/index.html`・`services/creative-x/index.html` | i18n.js, nav.js, service-media.js | 事業群ごとの紹介ページ |
+| サービス一覧 | `services/index.html` | i18n.js, nav.js, wp-config.js, service-media.js | Creative X / Sales Xの事業紹介とサービス一覧。動画はページ内再生 |
+| Sales X / Creative X | `services/sales-x/index.html`・`services/creative-x/index.html` | i18n.js, nav.js, wp-config.js, service-media.js | 事業群ごとの紹介ページ |
 | 旧サービス詳細URL | `services/{slug}/index.html` | 転送のみ | 個別詳細は廃止。公式サイトまたは一覧の該当サービスへ転送 |
 | 会社概要 | `company.html` | script.js, cta.js, dl-modal.js | |
 | ContentsXについて | `about.html` | i18n.js, nav.js, sitewide-motion.js | HERO・WHY・OUR ROLE・MISSION/VISION・VALUES・MESSAGE・FUTUREを統合。前半は `css/about-2026.css` / `about-why.css` / `about-our-role.css`、後半03–06は `css/about-late-2026.css`、末尾CTAは `css/about-next-action.css`。VALUES/FUTUREは共通feature-cardを再利用。後半の人物/未来写真は生成イメージ、代表メッセージは黒宮代表の既存実写真と確定本文 |
@@ -120,6 +120,7 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
   - PCの動くプレビュー（2026-10-10 平澤さん決定。bizmanga.contentsx.jp/bizanime の右側と同じ方式）: ページの読み込みが終わり、カードが見えていてHEROが場面のあいだ、見えている絵の裏でYouTubeを音なし・操作バーなし・ループで流す。再生が始まってから5秒間はYouTubeの題名などが出るので絵を上に残し、その後絵を薄くして動画を見せる。動画の部分は指し示せない・押せない（`pointer-events:none`）ので、マウスを乗せてもYouTubeの表示は戻らず、押すとカードが開く。10秒ごとに次の動画へ（マウスを乗せている間は進まない）。スマホ・タブレット・動きの軽減・タブ非表示・HEROを離れたときは絵のまま（スマホとタブレットは通信量と電池のため）。⚠️ YouTubeの規約が禁じる「公式の表示を隠す・押せなくする・上に重ねる」やり方で、YouTube側に埋め込みを止められる可能性があることを承知のうえで採用（法律ではなく利用規約の問題）。止められた場合もカードは絵のまま崩れない。
   - 絵を押すと開く: PCはカードがまっすぐになりながらHEROの右半分の中央へ動いて約1.5倍に広がり（右半分に収まらないときは縮める）、絵の外の左右に ‹ ›、右上に × を出す。タブレット・SPはカードの箱の中で横幅いっぱいに開き、‹ › × は絵の下（他の2枚は隠すが、箱の高さは保つのでページが跳ねない）。開くと操作バー付きのYouTubeプレイヤーで、プレビューの続きから音付きで再生する（ブラウザーが音付き再生を止めたときは音なしで始め、YouTubeの操作バーで音を出せる）。開いたまま横スクロール・‹ ›・←→キーで他の動画へ移ると、止まった位置の動画を再生する。×・Escで閉じると元の位置に戻り、フォーカスは絵へ戻る。他の2枚は薄く・少し小さくなり操作できない。
   - 共通: プレイヤーは常に1つ。HEROをスクロールで離れる（閉じる）・タブを隠す（一時停止）と止める。
+  - 動画の差し替え（2026-11-07）: `index.html` の `data-cxhv-slide` 3本が初期値。WordPress「サイトの表示 → ContentsX → トップページ → ヒーローの動画」（`GET /slots/cx-top-hero`。YouTube だけ・3本まで）に入れると、`js/home-hero.js` がその本数・順番・絵・題名に差し替える（読み上げの名前「Creative 動画 1/n「題名」…」も）。枠が空・読めない・4秒で返らない・WP 停止中は HTML の3本のまま。PCの動くプレビューはこの答えを待ってから始める（差し替わる前の動画を流さないため）
 - YouTube: 公式の IFrame Player API（`https://www.youtube.com/iframe_api`、PCは読み込み後、それ以外は開いたときに読み込む）で `youtube-nocookie.com` に埋め込む（`playsinline`・`rel=0`・`origin`・`enablejsapi`、操作バーあり）。読み込めないときは「動画を読み込めませんでした」と表示し、画面は崩れない。開いている間は、YouTube側のロゴ・題名・チャンネル名などの公式の表示とリンクが出る（開いているプレイヤーの上には何も重ねない）。ふだんのカード（PCのプレビュー含む）には出ない。`index.html` のCSPの `script-src` に `https://www.youtube.com` を追加した。
 - 書体: メインコピーとCreativeカードの見出しだけ `Noto Serif JP` 500（Google Fonts の `text=` で使う文字だけ読み込む）。
 - CSSは `css/home-hero.css`、JSは `js/home-hero.js`。検証は `python3 tests/test_hero.py --url <loopback preview> --artifacts <output>`（YouTube APIは記録用の代役に置換。19幅の文言・リンク・カードがHERO内・PCで1画面・コピーと重ならない・文字1.4倍、カードにYouTubeの表示が出ないこと、PCのプレビュー（音なし・操作バーなし・ループ・押せない・5秒後に絵が消える・10秒送り）、横スクロール、開いた位置（右半分の中央）と大きさ（1.5倍）・プレビューの続きから音付き再生・‹ ›と横スクロールで動画が移ること・自動送り停止・Esc・フォーカス、スクロールで閉じること、カード2/3の遷移、動きの軽減、YouTube不可、SP 375/390/430のタップ再生と「HEROの下端を見るまでフェードしない」こと、JS無効）。実際のYouTubeでの再生は手元のブラウザで確認（開く・音付き再生・横スクロールで切替・閉じる）。
@@ -168,7 +169,7 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
 - ビズアニメ / ビズビデオ（`js/cx-video-player.js`）: 共通の動画プレイヤー。各3本を横一列に並べ、横スクロール（SPは指でスワイプ、PCはトラックパッド・左右端の ‹ › ボタン・←→キー）で1本ずつ切り替える（2026-10-09 平澤さん指示で下のサムネイル列は廃止）。動画は枠の横幅いっぱいに16:9で表示し、上部の点で何本目かを示す（再生中は隠す）。最初はポスター・タイトル・説明と再生ボタンだけで、押すとその場で埋め込みを作って再生（自動再生しない）。別の動画へスクロール・別サービスを選ぶと埋め込みを外して止める。読み込み中・再生できないときは文字で知らせる。高画質サムネイル（maxresdefault）が無い動画は YouTube の灰色の代わり画像になるため、標準サイズ（hqdefault）に切り替える。
 - データ（`js/home-creative-x.js`、`WP_CONFIG.apiBase` 経由）:
   - 動画: `GET /bizanime-videos` の `viewer`（WPプラグイン「ビズアニメ・ビズビデオ動画」＞「CREATIVE X ビューワー動画」。種別・タイトル・説明・URL・ポスター・表示ON/OFF・並び順）。種別ごとに再生できるものを先頭から3本。ビューワー動画が未登録の種別は、ビズアニメは `playlists` のビズアニメ分 → 既存の `cases`（単体動画）、ビズビデオは `playlists` のビズビデオ分で代用する。
-  - マンガ: `GET /works?site=contentsx`（「ContentsX新作情報に表示」＝掲載可否、`cx_sort_order`＝表示順）のうち、ページ画像（`gallery`）を持つ先頭の作品。
+  - マンガ（2026-11-07〜）: WordPress「サイトの表示 → ContentsX → トップページ → Creative X のマンガ」（`GET /slots/cx-top-manga`。1作品）で選んだ作品を `GET /manga/{作品ID}` で読む。枠が空・読めない・その作品にページ画像が無いときは、`GET /works?site=contentsx`（掲載先に ContentsX がある作品、`cx_sort_order`＝共通の表示順）のうちページ画像（`gallery`）を持つ先頭の作品。⚠️ 共通の表示順は B のギャラリー・ビズ書庫・制作事例の一覧と同じ数字なので、枠が空のままだと B で並べ替えるとここも変わる
   - 埋め込みURLはフロントで検証済みIDから組み立てる（YouTube は `youtube-nocookie.com/embed/{id}`、プレイリストは `embed/videoseries?list=`、Google ドライブは `drive.google.com/file/d/{id}/preview`、mp4 は `<video>`）。APIの `embed` は使わない。画像は `cms.contentsx.jp` / `contentsx.jp` / `i.ytimg.com` の https とサイト内パスのみ。文字は textContent で入れ、HTMLとして解釈しない。
 - 大きさ: ビューワー内の高さはビューワーの横幅から決める（コンテナ単位。`--cxcx-view-h` = 横幅×9/16。上限はPCが画面の高さ−340px、タブレット・SPが画面の高さ−140px）。動画は横幅いっぱい、マンガの枠も同じ高さなので、切り替えても枠の高さは変わらない。SPのマンガは縦長（横幅×1.25、画面の高さの70%まで）。高さ860px以下のPCは上の余白とカード画像を低くする。ノートPC（1366×650〜1920×1080）ではカードまで1画面に収まり、高さ800px以上なら動画は枠の横幅いっぱい。それより低い画面では高さの上限で動画が少し小さくなる（YouTube側で左右に黒帯）。
 - 状態: データ取得中は「読み込み中…」。取得に失敗したら「動画（漫画）を読み込めませんでした」、データが無ければ「準備中です」と出し、どちらも各サービスへのリンクを添える（動画とマンガは別々に判定）。JS無効・WP設定が無効のときは `index.html` の静的な表示（I eye のポスターとビズアニメへのリンク、3カードは各サービスへのリンク）が残る。
@@ -239,7 +240,7 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
 - サービス生成は `python3 tools/build-services.py --check` と `python3 -m unittest discover -s tests -p test_build_services.py` で確認する。Pagesワークフローも同じ生成処理とテストを実行する。
 - Sales X・Creative Xの紹介ページは `tools/templates/service-group-*.html.tpl` と `css/service-landing-2026.css` から生成する。白・濃紺を土台に、Sales Xの青 `#005bfa` とCreative Xのオレンジ `#fa4d12` を使う。ヒーロー・相談CTAの画像は背景と境界をつなげ、スマホでは本文の下に置く。Creative Xのヒーローは `creative-hero-v2.webp`、Sales Xは `sales-hero-v2.webp`。Creative Xの「夜明けスタジオ」は表示しない。Sales Xのビズフォーム画像は実際の業務内容に沿った `bizform-research-v2.webp` を使う。
 - 紹介ページのサービス一覧カード（`render_landing_card`、#141）は共通部品 `.cx-feature-card cx-feature-card--wide`（Creative X は `--creative`）。画像の左上に番号と欧文ラベル（`CARD_LABELS`）、見出し・説明・タグ2つ・下のボタン（公式サイトを見る／公開予定／制作について相談）。カード全体はリンクにせず（動画の再生ボタンがあるため）、丸い矢印は置かない。`.cxg-service-card` は `js/service-media.js` の再生中クラスと準備中パネルの目印として残す（見た目の指定は無い）。スマホは縦積み。
-- ビズマンガは共用WordPressの「正義の値段」表紙、ビズアニメとビズビデオは公式の実作品ポスターを使用する。後2者はポスターを押すと `js/service-media.js` がローカルのH.264/AAC MP4をページ内で音声付き再生する。YouTubeのiframe・投稿者表示・外部リンクは置かない。再生/一時停止・音量・字幕・進捗バー・拡大操作はホバー/フォーカス時に表示し、タッチ端末では常時表示する。`media-src 'self'` をサービスページのCSPに指定する。
+- ビズマンガは共用WordPressの「正義の値段」表紙、ビズアニメとビズビデオは公式の実作品ポスターを使用する。後2者はポスターを押すと `js/service-media.js` がローカルのH.264/AAC MP4をページ内で音声付き再生する。WordPress「サイトの表示 → ContentsX → サービスページ → ビズアニメ欄／ビズビデオ欄の動画」（`GET /slots/cx-services-bizanime`・`cx-services-bizvideo`。ポスターの `data-wp-slot`、生成元は `tools/build-services.py` の `GROUP_VIDEOS`）に動画を入れると、その自社配信ファイル（`cms.contentsx.jp/wp-content/uploads/` の MP4）・絵・題名に差し替える（2026-11-07。WP は MP4 とサムネイルのある動画だけを返す）。WP の字幕ファイルは使わない（WP のアップロードは CORS の許可を返さず `<track>` が読めないため。字幕が無いときは CC ボタンを出さない）。枠が空・読めない・WP 停止中はローカルの動画のまま。Creative X の紹介ページも同じ枠を読む。YouTubeのiframe・投稿者表示・外部リンクは置かない。再生/一時停止・音量・字幕・進捗バー・拡大操作はホバー/フォーカス時に表示し、タッチ端末では常時表示する。`media-src 'self' https://cms.contentsx.jp` をサービスページのCSPに指定する（テンプレート `tools/templates/service-page.html.tpl`。WP の動画のため 2026-11-07 に cms を追加）。
 - ビズAIO・ビズカルテは画像エリアのホバー/フォーカス時に紺・青の「乞うご期待」を表示し、詳細リンクを出さない。ビズ採用は公式サービスページのヒーロー画像を使い、`https://ichioshi.contentsx.jp/service.html` に遷移する。ビズマンガは `https://bizmanga.contentsx.jp/`、ビズアニメは `https://bizmanga.contentsx.jp/bizanime` に直リンクする。ビズビデオは一覧内で再生し、制作相談へ誘導する。両事業ページは独自の相談CTAを持つため共通CTAは重複表示しない。
 
 ### 3.1 旧Hero v2（2026-09-29トップから撤去・履歴）
@@ -331,8 +332,10 @@ contact フォーム送信時にメッセージ末尾にトラッキング情報
 | GitHub Pages | ホスティング | `contentsx.jp` (CNAME) |
 
 ### WP API エンドポイント
-- `/works?site=contentsx` — 漫画事例
-- `/works-new?site=contentsx` — 新作情報
+- `/works?site=contentsx` — 漫画事例（Creative X のマンガの枠が空のときの代わり）
+- `/manga/{作品ID}` — Creative X のマンガの枠で選んだ作品（2026-11-07）
+- `/slots/cx-top-hero`・`/slots/cx-top-manga`・`/slots/cx-services-bizanime`・`/slots/cx-services-bizvideo` — 「サイトの表示」の枠（2026-11-07。どれも空なら HTML の表示のまま）
+- `/works-new?site=contentsx` — 新作情報（2026-10-13 にトップから外し、今はどこも読んでいない。WP の「表示する場所」からも 2026-11-07 にチェック欄を外した）
 - `/news?site=contentsx&per_page=50` — ニュース
 
 ### WordPress 一時停止スイッチ（メンテナンス表示・2026-10-22・Issue #173）⭐
@@ -340,7 +343,7 @@ WordPress 側の保守などで止めたいときに、**`js/wp-config.js` の `
 - そのページから WordPress API（`https://cms.contentsx.jp/wp-json/`）へのアクセスを一切しない（`fetch` 自体を設定ファイルで止めるので、URLを直書きしている部品も止まる）。各部品は既存の「読み込めなかったとき」の表示に落ちる（TOPICS は HTML の初期3件など）
 - 画面下に中立なお知らせ「ただいま一部の表示を一時停止しています。…」を出す（`css/cx-maintenance-notice.css`。どのセクションがWPかは名指ししない。×で閉じるとそのタブでは再表示しない。スマホのドロワーより下）
 - 自動ビルド（`build-c-columns`）はこの行を見て何もせず終わる（取り込み・コミットをしない）
-- ⚠️ WP を使うページは必ず `wp-config.js` を **WPを読む部品より前**に読み込む（現在は index / news / news-detail / recruit の4ページ）。新しくWPを読むページ・部品を作ったら同じようにする
+- ⚠️ WP を使うページは必ず `wp-config.js` を **WPを読む部品より前**に読み込む（現在は index / news / news-detail / recruit と services の一覧・Sales X・Creative X。services はテンプレートで入れる）。新しくWPを読むページ・部品を作ったら同じようにする
 - ⚠️ 行の書式（`  maintenance: false,`）を変えない。ワークフローが `grep` で判定している
 - ⚠️ WordPress 画像（`/wp-content/uploads/`）は止めない（静的ファイルのため）
 - ⚠️ これはサイト側の表示を守るだけで、WordPress サーバー自体は守らない。サーバー側の対応は非公開の運用手順で行う
