@@ -8,8 +8,7 @@
      the player shows the first three playable per type). Until a type has viewer videos: BizAnime
      uses its playlists and then the existing `cases`, BizVideo its playlists.
    In the HTML the cards are plain links to each service and the panel links to BizAnime, so the
-   section still works without JS. This script turns the cards into tabs (initial: BizAnime, or the
-   section's `data-cxcx-initial` — the Creative X page's WORKS opens on BizVideo).
+   section still works without JS. This script turns the cards into tabs (initial: BizAnime).
    Switching fades the panel (200ms) and rebuilds it, which stops any video and resets the reader.
    Nothing autoplays. When the data cannot be loaded the panel says so and links to the service. */
 (function () {
@@ -161,8 +160,7 @@
 
   root.classList.add('cxcx-enhanced');
   panel.textContent = '';  // the no-JS link gives way to「読み込み中…」without a fade
-  var initial = root.getAttribute('data-cxcx-initial');
-  select(Object.prototype.hasOwnProperty.call(LINKS, initial) ? initial : 'bizanime', false);
+  select('bizanime', false);
   Promise.all([getJSON('/bizanime-videos'), getJSON('/works?site=contentsx'), getJSON('/slots/cx-top-manga')]).then(function (res) {
     var id = chosenId(res[2]);
     return (id ? getJSON('/manga/' + id) : Promise.resolve(null)).then(function (chosen) { return [res[0], res[1], chosen]; });
