@@ -16,6 +16,10 @@
    - Leaving the Hero (scrolling on, js/hero-about.js), hiding the tab or closing stops the player.
      Only one player exists at a time.
    Videos are the [data-cxhv-slide] elements in index.html (YouTube ID + title), in that order.
+   Since 2026-11-07 WordPress can replace them: 「サイトの表示 → ContentsX → トップページ → ヒーローの動画」
+   (GET /slots/cx-top-hero — YouTube only, up to 3). An empty slot, a failed or slow request (SLOT_TIMEOUT)
+   or WordPress being off keeps the videos in index.html. The moving preview waits for this answer so it
+   never starts a video that is about to be replaced.
    YouTube is embedded with the official IFrame Player API on youtube-nocookie.com. While a video is
    open its own controls, logo and links are visible and nothing is laid over it. */
 (function () {
@@ -24,6 +28,8 @@
   var PREVIEW_ADVANCE_MS = 10000;
   var REVEAL_MS = 5000;
   var API_TIMEOUT = 10000;
+  var SLOT_TIMEOUT = 4000;
+  var YT_ID = /^[\w-]{11}$/;
   var SCALE = 1.5;
 
   var hero = document.getElementById('hero');
@@ -40,7 +46,7 @@
 
   var pc = window.matchMedia('(min-width: 1101px) and (hover: hover)');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var state = { index: 0, open: false, player: null, playerIndex: -1, timer: 0, visible: false, heroActive: true, hover: false, token: null, loaded: document.readyState === 'complete' };
+  var state = { index: 0, open: false, player: null, playerIndex: -1, timer: 0, visible: false, heroActive: true, hover: false, token: null, loaded: document.readyState === 'complete', slotReady: false };
   var preview = { player: null, index: -1, token: null, revealTimer: 0 };
   var TEXT = {
     ja: { fail: '動画を読み込めませんでした。時間をおいて、もう一度お試しください。' },
@@ -126,7 +132,7 @@
 
   /* ---------- PC moving preview (behind the picture, see the header) ---------- */
   function previewAllowed() {
-    return pc.matches && !reduced.matches && state.loaded && !document.hidden && state.visible && state.heroActive && !state.open;
+    return pc.matches && !reduced.matches && state.loaded && state.slotReady && !document.hidden && state.visible && state.heroActive && !state.open;
   }
   function destroyPreview() {
     preview.token = null;
@@ -288,6 +294,46 @@
     update();
   }
 
+  /* ---------- videos chosen in WordPress (2026-11-07) ---------- */
+  function applySlot(items) {
+    var list = (Array.isArray(items) ? items : []).filter(function (c) {
+      return c && c.video && c.video.provider === 'youtube' && YT_ID.test(String(c.video.video_id || ''));
+    }).slice(0, slides.length);
+    if (!list.length || state.open) return;
+    var same = list.length === slides.length && list.every(function (c, k) { return slides[k].getAttribute('data-video') === c.video.video_id; });
+    if (same) return;
+    var n = list.length;
+    list.forEach(function (c, k) {
+      var id = c.video.video_id;
+      var title = String(c.title || '').trim() || 'Creative';
+      var thumb = /^https:\/\/[^\s"'<>]+$/.test(String(c.thumb || '')) ? c.thumb : 'https://i.ytimg.com/vi/' + id + '/hqdefault.jpg';
+      var btn = slides[k].querySelector('.cxhv-slide-btn');
+      slides[k].setAttribute('data-video', id);
+      slides[k].setAttribute('data-title', title);
+      btn.setAttribute('aria-label', 'Creative 動画 ' + (k + 1) + '/' + n + '「' + title + '」を拡大して再生');
+      var img = btn.querySelector('img');
+      if (img) img.src = thumb;
+    });
+    slides.splice(n).forEach(function (s) { s.remove(); });
+    mark(Math.min(state.index, n - 1));
+    track.scrollLeft = state.index * width();
+  }
+  function loadSlot() {
+    function done() {
+      if (state.slotReady) return;
+      state.slotReady = true;
+      update();
+    }
+    if (typeof WP_CONFIG === 'undefined' || WP_CONFIG.enabled === false || !WP_CONFIG.apiBase || !window.fetch) { done(); return; }
+    var ctrl = 'AbortController' in window ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); done(); }, SLOT_TIMEOUT);
+    fetch(WP_CONFIG.apiBase + '/slots/cx-top-hero', ctrl ? { signal: ctrl.signal } : {})
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (d) { if (!state.slotReady) applySlot(d && d.items); })
+      .catch(function (e) { console.warn('[Hero] /slots/cx-top-hero failed:', e.message); })
+      .then(function () { clearTimeout(timer); done(); });
+  }
+
   /* ---------- events ---------- */
   slides.forEach(function (s, i) {
     s.querySelector('.cxhv-slide-btn').addEventListener('click', function () { open(i); });
@@ -350,6 +396,7 @@
   pc.addEventListener('change', function () { close(false); update(); });
   reduced.addEventListener('change', update);
   mark(0);
+  loadSlot();
   if (!state.loaded) {
     window.addEventListener('load', function () {
       // Give the first paint and the rest of the page room before YouTube loads.

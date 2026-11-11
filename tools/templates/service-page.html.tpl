@@ -59,6 +59,7 @@
 <script src="/js/nav.js" defer></script>
 <script src="/js/tracking.js" defer></script>
 <script src="/js/dl-modal.js" defer></script>
+<script src="/js/wp-config.js" defer></script>
 <script src="/js/service-media.js" defer></script>
 <script src="/js/sitewide-motion.js" defer></script>{{EXTRA_SCRIPTS}}
 </body>

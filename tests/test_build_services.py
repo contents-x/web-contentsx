@@ -230,12 +230,18 @@ class ServiceBuildTests(unittest.TestCase):
                  "/js/cx-works.js", "/js/service-creative-solution.js"]
         positions = [creative.index(f'<script src="{src}" defer></script>') for src in order]
         self.assertEqual(positions, sorted(positions))
-        self.assertLess(creative.index('/js/sitewide-motion.js'), positions[0])
+        # wp-config.js is shared by every service page since #190 (once, before service-media.js); the
+        # Creative X extras come after the shared scripts.
+        for html in (creative, sales):
+            self.assertEqual(html.count('<script src="/js/wp-config.js" defer></script>'), 1)
+            self.assertLess(html.index('/js/wp-config.js'), html.index('/js/service-media.js'))
+        self.assertLess(creative.index('/js/sitewide-motion.js'), positions[1])
         for href in ("/css/home-creative-x.css", "/css/cx-works.css", "/css/service-creative-solution.css"):
             self.assertIn(f'<link rel="stylesheet" href="{href}">', creative)
             self.assertNotIn(href, sales)
-        self.assertIn("media-src 'self' https://cms.contentsx.jp;", creative)
-        self.assertIn("media-src 'self';", sales)
+        # Every service page may play WordPress media files (#190).
+        for html in (creative, sales):
+            self.assertIn("media-src 'self' https://cms.contentsx.jp;", html)
         self.assertNotIn("cx-works.js", sales)
 
     def test_sitemap_update_preserves_other_sections(self):

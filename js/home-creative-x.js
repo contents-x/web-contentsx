@@ -1,5 +1,7 @@
 /* Creative X: the three cards below switch the main viewer above (Issue #97).
-   - BizManga: an inline manga reader (js/cx-manga-reader.js) for the first ContentsX manga in
+   - BizManga: an inline manga reader (js/cx-manga-reader.js) for the manga chosen in WordPress
+     (「サイトの表示 → ContentsX → トップページ → Creative X のマンガ」 GET /slots/cx-top-manga → its work ID →
+     GET /manga/{ID}; 2026-11-07). When that slot is empty or cannot be read: the first ContentsX manga in
      WordPress order (GET /works?site=contentsx — `gallery` / `view_type`).
    - BizAnime / BizVideo: the shared inline player (js/cx-video-player.js) with three videos each.
      Source: GET /bizanime-videos → `viewer` (WP「CREATIVE X ビューワー動画」, enabled + admin order;
@@ -51,16 +53,23 @@
     return (videos && Array.isArray(videos.cases) ? videos.cases : []).filter(function (v) { return v && v.provider === 'youtube'; })
       .map(function (v) { return { title: text(v.title), description: '', provider: 'youtube', video_id: text(v.video_id), poster: text(v.poster) }; });
   }
-  function prepare(videos, works) {
+  function readable(w) { return !!(w && Array.isArray(w.gallery) && w.gallery.length); }
+  /* The work ID from the slot card (`slug`). Only the characters the /manga/{ID} route accepts. */
+  function chosenId(slot) {
+    var card = slot && Array.isArray(slot.items) ? slot.items[0] : null;
+    var id = card && typeof card.slug === 'string' ? card.slug : '';
+    return /^[a-z0-9-]{1,100}$/.test(id) ? id : '';
+  }
+  function prepare(videos, works, chosen) {
     var anime = viewerItems(videos, 'bizanime');
     var film = viewerItems(videos, 'bizvideo');
-    var manga = (Array.isArray(works) ? works : []).filter(function (w) { return w && Array.isArray(w.gallery) && w.gallery.length; })[0] || null;
+    var manga = readable(chosen) ? chosen : (Array.isArray(works) ? works : []).filter(readable)[0] || null;
     return {
       bizanime: anime.length ? anime : playlists(videos, 'bizanime').concat(cases(videos)),
       bizvideo: film.length ? film : playlists(videos, 'bizvideo'),
       manga: manga,
       videosFailed: !videos,
-      worksFailed: !Array.isArray(works)
+      worksFailed: !Array.isArray(works) && !readable(chosen)
     };
   }
 
@@ -154,8 +163,11 @@
   panel.textContent = '';  // the no-JS link gives way to「読み込み中…」without a fade
   var initial = root.getAttribute('data-cxcx-initial');
   select(Object.prototype.hasOwnProperty.call(LINKS, initial) ? initial : 'bizanime', false);
-  Promise.all([getJSON('/bizanime-videos'), getJSON('/works?site=contentsx')]).then(function (res) {
-    data = prepare(res[0], res[1]);
+  Promise.all([getJSON('/bizanime-videos'), getJSON('/works?site=contentsx'), getJSON('/slots/cx-top-manga')]).then(function (res) {
+    var id = chosenId(res[2]);
+    return (id ? getJSON('/manga/' + id) : Promise.resolve(null)).then(function (chosen) { return [res[0], res[1], chosen]; });
+  }).then(function (res) {
+    data = prepare(res[0], res[1], res[2]);
     build(active);
     root.classList.add('cxcx-ready');
   });

@@ -1,4 +1,51 @@
-/* Play the approved works directly in this page, with no third-party player UI. */
+/* Play the approved works directly in this page, with no third-party player UI.
+   Since 2026-11-07 a poster with data-wp-slot reads the video chosen in WordPress
+   (「サイトの表示 → ContentsX → サービスページ → ビズアニメ欄／ビズビデオ欄の動画」 GET /slots/<key>):
+   WordPress only returns videos that have their own MP4 file and a picture. The file must be on
+   cms.contentsx.jp (the pages' CSP allows media from there). Its captions are not used: WordPress does not
+   send CORS headers for uploads, so a <track> from there would not load (checked 2026-11-07); without a
+   track the CC button is left out. When the slot is empty, cannot be read or WordPress is off, the video
+   written in the HTML stays. */
+const LOCAL_VIDEO = /^\/material\/service-2026\/[\w-]+\.mp4$/;
+const LOCAL_CAPTIONS = /^\/material\/service-2026\/[\w-]+\.ja\.vtt$/;
+const WP_UPLOAD = /^https:\/\/cms\.contentsx\.jp\/wp-content\/uploads\/[\w\/.%-]+$/;
+const SLOT_TIMEOUT = 5000;
+
+function wpFile(url, ext) {
+  return WP_UPLOAD.test(url || '') && new RegExp(`\\.${ext}$`, 'i').test(url) && !url.includes('..');
+}
+
+function applySlot(poster, card) {
+  const video = card && card.video;
+  if (!video || !wpFile(video.src, 'mp4')) return;
+  const thumb = String(card.thumb || '');
+  if (!/^https:\/\/cms\.contentsx\.jp\/|^https:\/\/i\.ytimg\.com\//.test(thumb)) return;
+  poster.dataset.videoSrc = video.src;
+  delete poster.dataset.captionSrc;
+  const img = poster.querySelector('img');
+  if (img) img.src = thumb;
+  const title = String(card.title || '').trim();
+  if (title) poster.setAttribute('aria-label', `${poster.dataset.wpLabel || '制作事例'}「${title}」を音声付きで再生`);
+}
+
+function loadSlots() {
+  if (typeof WP_CONFIG === 'undefined' || WP_CONFIG.enabled === false || !WP_CONFIG.apiBase || !window.fetch) return;
+  const posters = Array.from(document.querySelectorAll('.cxg-video-play[data-wp-slot]'));
+  const keys = [...new Set(posters.map((p) => p.dataset.wpSlot).filter((k) => /^[a-z0-9-]+$/.test(k)))];
+  keys.forEach((key) => {
+    const ctrl = 'AbortController' in window ? new AbortController() : null;
+    const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, SLOT_TIMEOUT);
+    fetch(`${WP_CONFIG.apiBase}/slots/${key}`, ctrl ? { signal: ctrl.signal } : {})
+      .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then((d) => {
+        const card = d && Array.isArray(d.items) ? d.items[0] : null;
+        // A poster that is already playing has been replaced by the player; only the waiting ones change.
+        posters.filter((p) => p.dataset.wpSlot === key && p.isConnected).forEach((p) => applySlot(p, card));
+      })
+      .catch((e) => console.warn(`[service-media] /slots/${key} failed:`, e.message))
+      .finally(() => clearTimeout(timer));
+  });
+}
 function mediaButton(action, label, symbol) {
   const button = document.createElement('button');
   button.type = 'button';
@@ -12,7 +59,7 @@ function mediaButton(action, label, symbol) {
 function startServiceVideo(poster) {
   const src = poster.dataset.videoSrc;
   const captionsSrc = poster.dataset.captionSrc;
-  if (!/^\/material\/service-2026\/[\w-]+\.mp4$/.test(src || '')) return;
+  if (!LOCAL_VIDEO.test(src || '') && !wpFile(src, 'mp4')) return;
 
   const shell = document.createElement('div');
   shell.className = 'cxg-video-shell';
@@ -24,7 +71,8 @@ function startServiceVideo(poster) {
   video.playsInline = true;
   video.poster = poster.querySelector('img')?.src || '';
   video.setAttribute('aria-label', poster.getAttribute('aria-label') || '制作事例の動画');
-  if (/^\/material\/service-2026\/[\w-]+\.ja\.vtt$/.test(captionsSrc || '')) {
+  const hasCaptions = LOCAL_CAPTIONS.test(captionsSrc || '');
+  if (hasCaptions) {
     const track = document.createElement('track');
     track.kind = 'captions';
     track.label = '日本語（自動生成）';
@@ -49,7 +97,9 @@ function startServiceVideo(poster) {
   progress.value = '0';
   progress.setAttribute('aria-label', '動画の再生位置');
   const fullscreen = mediaButton('fullscreen', '動画を拡大', '⛶');
-  controls.append(play, volume, captions, progress, fullscreen);
+  controls.append(play, volume);
+  if (hasCaptions) controls.append(captions);
+  controls.append(progress, fullscreen);
   shell.append(video, surface, controls);
   poster.replaceWith(shell);
   shell.closest('.cxg-service-card')?.classList.add('cxg-service-card--playing');
@@ -108,6 +158,8 @@ function startServiceVideo(poster) {
     syncPlayState();
   });
 }
+
+loadSlots();
 
 document.addEventListener('click', (event) => {
   const poster = event.target.closest('.cxg-video-play');
