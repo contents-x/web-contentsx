@@ -39,15 +39,38 @@
     } catch (e) { return ''; }
   }
 
-  /** WP_CONFIG.apiBase + path を JSON で取得。失敗・タイムアウトは警告を出して null */
+  /** WP_CONFIG.apiBase + path を JSON で取得。失敗・タイムアウトは警告を出して null。
+      同じページで同じ path を複数の部品が読むとき（Creative X 紹介ページの HERO と WORKS）は1回だけ取得する */
+  var requests = {};
   function getJSON(path, timeout, label) {
+    if (requests[path]) return requests[path];
     var controller = 'AbortController' in window ? new AbortController() : null;
     var timer = controller && setTimeout(function () { controller.abort(); }, timeout || 8000);
-    return fetch(WP_CONFIG.apiBase + path, controller ? { signal: controller.signal } : {})
+    requests[path] = fetch(WP_CONFIG.apiBase + path, controller ? { signal: controller.signal } : {})
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
       .catch(function (e) { console.warn('[' + (label || 'WP') + '] ' + path + ' failed:', e.message); return null; })
       .then(function (d) { clearTimeout(timer); return d; });
+    return requests[path];
   }
 
-  window.cxDom = { text: text, el: el, iconButton: iconButton, safeImage: safeImage, getJSON: getJSON };
+  /** getJSON の結果に「何が起きたか」を付けたもの。「空」「キーが無い」「失敗」を分けたい部品用
+      （Creative X の掲載枠: 200 で items が空なのは正しい答え、404 は WordPress にまだ無いキー）。
+      { status, data } で解決する（reject しない）: status は HTTP の番号、通信エラー・タイムアウトは 0。
+      data は 2xx のときの JSON、それ以外は null。同じ path は1回だけ取得（getJSON と同じ） */
+  var results = {};
+  function getJSONStatus(path, timeout, label) {
+    if (results[path]) return results[path];
+    var controller = 'AbortController' in window ? new AbortController() : null;
+    var timer = controller && setTimeout(function () { controller.abort(); }, timeout || 8000);
+    results[path] = fetch(WP_CONFIG.apiBase + path, controller ? { signal: controller.signal } : {})
+      .then(function (res) {
+        if (!res.ok) return { status: res.status, data: null };
+        return res.json().then(function (d) { return { status: res.status, data: d }; }, function () { return { status: 0, data: null }; });
+      })
+      .catch(function (e) { console.warn('[' + (label || 'WP') + '] ' + path + ' failed:', e.message); return { status: 0, data: null }; })
+      .then(function (r) { clearTimeout(timer); return r; });
+    return results[path];
+  }
+
+  window.cxDom = { text: text, el: el, iconButton: iconButton, safeImage: safeImage, getJSON: getJSON, getJSONStatus: getJSONStatus };
 })();

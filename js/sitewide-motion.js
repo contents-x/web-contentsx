@@ -14,12 +14,15 @@
     '.company-info', '.leader-card', '.partners-cards', '.partners-recruit',
     '.rc-op__intro', '.rc-op-item', '.rc-sel__head', '.rc-sel__step', '.rc-entry__inner',
     '.cxtp-head', '.cxtp-list',
+    '.cxcs-head', '.cxcs-flow', '.cxcs-uses', '.cxcs-note',
+    '.cxpf-head', '.cxpf-timeline', '.cxfq-head', '.cxfq-list', '.cxfq-contact',
     '.cx-col-featured-card', '.cx-col-grid', '.cx-col-toc', '.cx-col-cta',
     '.news-list', '.faq-list', '.faq-cta', '.legal-page h2',
     '.cxs-section-header', '.cxs-service-grid', '.cxs-tab-panel:not([hidden])',
     '.cxs-detail-extra',
     '.cxg-heading', '.cxg-overview-grid', '.cxg-detail-row', '.cxg-collaboration__inner',
-    '.cxg-contact__inner'
+    '.cxg-contact__inner',
+    '.cxw-head', '.cxw-gallery'
   ].join(',');
   var wipeSelector = [
     '.ax-photo > img:first-child', '.ax-value-card > img',

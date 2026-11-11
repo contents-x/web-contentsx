@@ -1,0 +1,369 @@
+{
+ "_note": "Real answers of GET /wp-json/contentsx/v1/slots/<key> from the local WordPress with production public data (plugin branch feat/creative-x-slots, 2026-11-09; docs/DESIGN-content-library.md §17). Test data only (tests/ is never published). Post ids are the local ones.",
+ "slots": {
+  "cx-creative-hero": {
+   "status": 200,
+   "body": {
+    "key": "cx-creative-hero",
+    "site": "contentsx",
+    "label": "HERO の動画",
+    "items": []
+   }
+  },
+  "cx-creative-works": {
+   "status": 200,
+   "body": {
+    "key": "cx-creative-works",
+    "site": "contentsx",
+    "label": "WORKS の作品",
+    "items": [
+     {
+      "kind": "manga",
+      "id": 28,
+      "title": "マンガでわかるカミレス【公共・自治体編】",
+      "label": "CASE",
+      "date": "2026-10-14",
+      "thumb": "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-01-212x300.webp",
+      "url": "",
+      "slug": "opro-kamiless",
+      "sites": [
+       "bizmanga",
+       "contentsx"
+      ],
+      "pickup": false,
+      "category": [
+       "商品紹介",
+       "営業"
+      ],
+      "format_key": "manga",
+      "description": "「申請をオンラインにしたのに、職員の仕事は減らない」——自治体の情報政策課を舞台に、受付のあとに残る確認・差し戻し・決裁の手間をそのまま描いた構成です。機能の説明から入らず、別の課からの問い合わせ電話や差し戻しの依頼が続く日常を先に見せ、申請受付後の業務まで一つの画面でつなぐ姿へ移していきます。「デジタル化は、入れて終わりではない」という一言に着地させ、導入を検討する自治体担当者が自分の現場に重ねられるようにしました。",
+      "manga": {
+       "view_type": "spread",
+       "gallery": [
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-01.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-02.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-03.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-04.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-05.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-06.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-07.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-08.webp"
+       ]
+      }
+     },
+     {
+      "kind": "video",
+      "id": 754,
+      "title": "Good Bye MV",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://i.ytimg.com/vi/V9ZC16hTlZI/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=V9ZC16hTlZI",
+      "slug": "good-bye-mv",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "anime"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "youtube",
+       "video_id": "V9ZC16hTlZI",
+       "embed": "https://www.youtube-nocookie.com/embed/V9ZC16hTlZI",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "anime"
+     },
+     {
+      "kind": "video",
+      "id": 750,
+      "title": "VLOG",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://i.ytimg.com/vi/QqRlb_JGaHw/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=QqRlb_JGaHw",
+      "slug": "vlog",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "video"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "youtube",
+       "video_id": "QqRlb_JGaHw",
+       "embed": "https://www.youtube-nocookie.com/embed/QqRlb_JGaHw",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "video"
+     },
+     {
+      "kind": "video",
+      "id": 740,
+      "title": "バトル・アクション系アニメMV",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://i.ytimg.com/vi/_fmQgBhTo1k/hqdefault.jpg",
+      "url": "https://www.youtube.com/playlist?list=PLb1LJBwnSgCE",
+      "slug": "%e3%83%90%e3%83%88%e3%83%ab%e3%83%bb%e3%82%a2%e3%82%af%e3%82%b7%e3%83%a7%e3%83%b3%e7%b3%bb%e3%82%a2%e3%83%8b%e3%83%a1mv",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "anime"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "youtube_playlist",
+       "video_id": "PLb1LJBwnSgCE",
+       "embed": "https://www.youtube-nocookie.com/embed/videoseries?list=PLb1LJBwnSgCE",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "anime"
+     },
+     {
+      "kind": "manga",
+      "id": 292,
+      "title": "正義の値段",
+      "label": "CASE",
+      "date": "2026-10-14",
+      "thumb": "https://cms.contentsx.jp/wp-content/uploads/2026/03/正義の値段表紙-211x300.webp",
+      "url": "",
+      "slug": "uike-law",
+      "sites": [
+       "bizmanga",
+       "contentsx"
+      ],
+      "pickup": false,
+      "category": [
+       "ブランド"
+      ],
+      "format_key": "manga",
+      "description": "弁護士の原体験と信念を縦スクロール形式のストーリー漫画で表現。感情に訴える構成で、人となりへの深い理解と共感を生み出します。",
+      "manga": {
+       "view_type": "vertical_only",
+       "gallery": [
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p01-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p02-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p03-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p04-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p05-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p06-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p07-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p08-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p09-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p10-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p11-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p12-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p13-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p14-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p15-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p16-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p17-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p18-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p19-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p20-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p21-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p22-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p23-1.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/08/e6ada3e7bea9e381aee580a4e6aeb5_10e4b887e58686e381aee6ada3e7bea9_compressed-2-p24-1.webp"
+       ]
+      }
+     },
+     {
+      "kind": "video",
+      "id": 752,
+      "title": "【MV】目MEめぇ～愛 I eye",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://contentsx.jp/material/service-2026/bizanime-ieye.jpg",
+      "url": "https://drive.google.com/file/d/1kffZJKMAMB9rJGVKYxSgjbDs5UI99BTQ/view",
+      "slug": "%e3%80%90mv%e3%80%91%e7%9b%aeme%e3%82%81%e3%81%87%ef%bd%9e%e6%84%9b-i-eye",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "anime"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "drive",
+       "video_id": "1kffZJKMAMB9rJGVKYxSgjbDs5UI99BTQ",
+       "embed": "https://drive.google.com/file/d/1kffZJKMAMB9rJGVKYxSgjbDs5UI99BTQ/preview",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "anime"
+     }
+    ]
+   }
+  },
+  "cx-creative-solution-manga": {
+   "status": 200,
+   "body": {
+    "key": "cx-creative-solution-manga",
+    "site": "contentsx",
+    "label": "ビズマンガの代表作品",
+    "items": [
+     {
+      "kind": "manga",
+      "id": 28,
+      "title": "マンガでわかるカミレス【公共・自治体編】",
+      "label": "CASE",
+      "date": "2026-10-14",
+      "thumb": "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-01-212x300.webp",
+      "url": "",
+      "slug": "opro-kamiless",
+      "sites": [
+       "bizmanga",
+       "contentsx"
+      ],
+      "pickup": false,
+      "category": [
+       "商品紹介",
+       "営業"
+      ],
+      "format_key": "manga",
+      "description": "「申請をオンラインにしたのに、職員の仕事は減らない」——自治体の情報政策課を舞台に、受付のあとに残る確認・差し戻し・決裁の手間をそのまま描いた構成です。機能の説明から入らず、別の課からの問い合わせ電話や差し戻しの依頼が続く日常を先に見せ、申請受付後の業務まで一つの画面でつなぐ姿へ移していきます。「デジタル化は、入れて終わりではない」という一言に着地させ、導入を検討する自治体担当者が自分の現場に重ねられるようにしました。",
+      "manga": {
+       "view_type": "spread",
+       "gallery": [
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-01.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-02.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-03.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-04.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-05.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-06.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-07.webp",
+        "https://cms.contentsx.jp/wp-content/uploads/2026/10/opro-kamiless-08.webp"
+       ]
+      }
+     }
+    ]
+   }
+  },
+  "cx-creative-solution-anime": {
+   "status": 200,
+   "body": {
+    "key": "cx-creative-solution-anime",
+    "site": "contentsx",
+    "label": "ビズアニメの代表作品",
+    "items": [
+     {
+      "kind": "video",
+      "id": 754,
+      "title": "Good Bye MV",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://i.ytimg.com/vi/V9ZC16hTlZI/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=V9ZC16hTlZI",
+      "slug": "good-bye-mv",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "anime"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "youtube",
+       "video_id": "V9ZC16hTlZI",
+       "embed": "https://www.youtube-nocookie.com/embed/V9ZC16hTlZI",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "anime"
+     }
+    ]
+   }
+  },
+  "cx-creative-solution-video": {
+   "status": 200,
+   "body": {
+    "key": "cx-creative-solution-video",
+    "site": "contentsx",
+    "label": "ビズビデオの代表作品",
+    "items": [
+     {
+      "kind": "video",
+      "id": 750,
+      "title": "VLOG",
+      "label": "VIDEO",
+      "date": "2026-11-09",
+      "thumb": "https://i.ytimg.com/vi/QqRlb_JGaHw/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=QqRlb_JGaHw",
+      "slug": "vlog",
+      "sites": [
+       "contentsx"
+      ],
+      "pickup": false,
+      "description": "",
+      "achievement": "",
+      "format": [
+       "video"
+      ],
+      "service": [
+       "bizstory"
+      ],
+      "category": [],
+      "video": {
+       "provider": "youtube",
+       "video_id": "QqRlb_JGaHw",
+       "embed": "https://www.youtube-nocookie.com/embed/QqRlb_JGaHw",
+       "src": "",
+       "captions": "",
+       "file": ""
+      },
+      "format_key": "video"
+     }
+    ]
+   }
+  },
+  "cx-creative-nothing": {
+   "status": 404,
+   "body": {
+    "error": "not_found"
+   }
+  }
+ }
+}

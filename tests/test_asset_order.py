@@ -8,7 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKIP = ('_archive/', 'review/', 'tests/', 'skills/', 'node_modules/')
-CX_DOM_USERS = ('cx-manga-reader.js', 'cx-video-player.js', 'home-creative-x.js', 'home-topics.js')
+CX_DOM_USERS = ('cx-manga-reader.js', 'cx-video-player.js', 'home-creative-x.js', 'home-topics.js',
+                'cx-works.js', 'service-creative-solution.js')
 
 
 def pages():

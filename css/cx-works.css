@@ -1,0 +1,87 @@
+/* cxWorks viewer dialog (js/cx-works.js): the one work viewer of the Creative X landing (WORKS and
+   01 CREATIVE SOLUTION). Shared: dark backdrop, kind + title, close button, fade and rise in / fade out,
+   the loading and error texts of the reader and player, no page scroll behind.
+   The view differs by format:
+     MANGA          an open book floating on the backdrop (css/cx-manga-book.css)
+     ANIME / VIDEO  a phone lying on its side; the YouTube player fills its screen. The frame is drawn
+                    around the screen only, so the player's own controls are never covered.
+                    The phone is 3D (js/cx-phone-3d.js) where WebGL2 runs on the GPU; this CSS phone is
+                    its layout (the 3D phone is built from these boxes) and its fallback.
+   The reader (.cxmr) and the player (.cxvp) keep their styles from home-creative-x.css; this file sizes
+   them through the variables they read: --cxcx-manga-h (page height), --cxcx-view-h (video height). */
+html.cxwv-lock { overflow:hidden; scrollbar-gutter:stable; }
+.cxwv { position:fixed; inset:0; z-index:10050; display:grid; place-items:center; padding:clamp(12px,3vw,40px); background:rgba(6,13,36,.95); color:var(--cx-color-white); opacity:0; overscroll-behavior:contain; transition:opacity .2s ease; }
+.cxwv[hidden] { display:none; }
+/* The page behind stays as a dim, soft shape only (the dialog is static, so the blur is drawn once). */
+@supports (backdrop-filter:blur(1px)) { .cxwv { backdrop-filter:blur(6px); } }
+.cxwv.is-open { opacity:1; }
+.cxwv.is-closing { opacity:0; pointer-events:none; }
+.cxwv-panel { z-index:1; --cxcx-view-h:min(56.25cqw,calc(100svh - 170px)); --cxcx-manga-h:calc(100svh - 170px); position:relative; display:flex; flex-direction:column; width:min(1320px,100%); max-height:100%; transform:translateY(14px) scale(.98); transition:transform .35s var(--cx-motion-ease); }
+.cxwv.is-open .cxwv-panel { transform:none; }
+.cxwv-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:2px 2px 14px; }
+.cxwv-heading { min-width:0; }
+.cxwv-kind { margin:0; color:var(--cx-color-creative); font:700 var(--cx-type-label)/1.4 var(--cx-font-latin); letter-spacing:.24em; }
+.cxwv-title { margin:4px 0 0; color:var(--cx-color-white); font-family:var(--cx-font-ja); font-size:clamp(1rem,1.6vw,1.375rem); font-weight:var(--cx-weight-heading); line-height:1.4; letter-spacing:0; overflow-wrap:anywhere; }
+.cxwv-close { display:grid; flex:none; place-items:center; width:44px; height:44px; padding:0; border:1px solid rgba(255,255,255,.42); border-radius:50%; background:transparent; color:var(--cx-color-white); font-size:24px; line-height:1; cursor:pointer; transition:background var(--cx-motion-fast) ease; }
+.cxwv-close span { margin-top:-2px; }
+.cxwv-body { min-height:0; container-type:inline-size; }
+.cxwv :focus-visible { outline:3px solid var(--cx-color-white); outline-offset:3px; }
+@media (hover:hover) { .cxwv-close:hover { background:rgba(255,255,255,.12); } }
+/* The reader's and player's own loading / error lines, on the dark backdrop. */
+.cxwv .cxmr-status,.cxwv .cxvp-loading { color:rgba(255,255,255,.86); font-size:var(--cx-type-small); }
+
+/* ---------- ANIME / VIDEO: a phone lying on its side ----------
+   --cxwv-w: the whole phone, as wide as the screen allows for a 2:1 screen under the title.
+   The screen is 2:1 like a phone's; a 16:9 video gets thin bars at the sides from the YouTube player
+   itself, and a portrait video stays whole between wider bars. */
+.cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-bezel:clamp(10px,1.15vw,16px); --cxwv-w:min(1160px,100vw - 96px,(100svh - 190px) * 2 + 2 * var(--cxwv-bezel)); --cxwv-screen-h:calc((var(--cxwv-w) - 2 * var(--cxwv-bezel)) / 2); }
+.cxwv:is([data-kind="anime"],[data-kind="video"]) .cxwv-panel { width:var(--cxwv-w); max-width:100%; }
+.cxwv-phone { position:relative; width:var(--cxwv-w); max-width:100%; margin-inline:auto; }
+.cxwv-phone__frame { position:relative; padding:var(--cxwv-bezel); border-radius:calc(var(--cxwv-bezel) * 3); background:linear-gradient(160deg,#2b2f38 0%,#111318 42%,#1c1f26 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),inset 0 0 0 3px #08090c,inset 0 1px 8px rgba(255,255,255,.07),
+    0 0 0 1.5px #3c414c,0 4px 0 1px #0a0b0f,0 34px 80px rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.35); }
+/* The player is built on the screen element itself (.cxwv-phone__screen.cxvp): its height is the screen's. */
+.cxwv-phone__screen { --cxcx-view-h:var(--cxwv-screen-h); position:relative; height:var(--cxwv-screen-h); overflow:hidden; border-radius:calc(var(--cxwv-bezel) * 1.3); background:#000; }
+.cxwv-phone__screen .cxvp-track { border-radius:0; }
+/* Front camera in the side bezel (never on the picture). */
+.cxwv-phone__camera { position:absolute; top:50%; left:calc(var(--cxwv-bezel) / 2); width:calc(var(--cxwv-bezel) * .5); aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 35% 35%,#41557a 0 16%,#0c1426 46%,#020306 100%); box-shadow:0 0 0 1px rgba(255,255,255,.06); transform:translate(-50%,-50%); }
+/* Keys on the long edges. */
+.cxwv-phone__key { position:absolute; height:3px; background:linear-gradient(#41464f,#1b1e24); }
+.cxwv-phone__key--power { top:-3px; left:20%; width:9%; border-radius:3px 3px 0 0; }
+.cxwv-phone__key--vol-up,.cxwv-phone__key--vol-down { bottom:-3px; width:6.5%; border-radius:0 0 3px 3px; }
+.cxwv-phone__key--vol-up { left:15%; }
+.cxwv-phone__key--vol-down { left:23%; }
+
+/* ---------- the 3D phone ----------
+   The canvas covers the dialog behind the panel; the CSS phone keeps its boxes but not its drawing, and
+   the player's screen fades in once the 3D phone faces the visitor (.is-settled). No rise-in for the
+   panel: the phone's own entrance replaces it, and the boxes must not move while they are measured. */
+.cxwv-gl { position:absolute; inset:0; z-index:0; display:block; width:100%; height:100%; pointer-events:none; opacity:0; }
+.cxwv.is-3d .cxwv-panel { transform:none; transition:none; }
+.cxwv-phone.is-3d .cxwv-phone__frame { background:none; box-shadow:none; }
+.cxwv-phone.is-3d :is(.cxwv-phone__camera,.cxwv-phone__key) { visibility:hidden; }
+.cxwv-phone.is-3d .cxwv-phone__screen { opacity:0; transition:opacity .24s ease; }
+.cxwv-phone.is-3d.is-settled .cxwv-phone__screen { opacity:1; }
+
+/* Phones: no phone inside the phone. The frame thins to a bezel and the screen becomes 16:9, edge to edge. */
+@media (max-width:768px) {
+  .cxwv { padding:0; background:#060d24; }
+  .cxwv-panel,.cxwv:is([data-kind="anime"],[data-kind="video"]) .cxwv-panel { --cxcx-view-h:56.25cqw; --cxcx-manga-h:min(141cqw,calc(100svh - 210px)); width:100%; height:100%; max-height:none; padding:12px 12px max(12px,env(safe-area-inset-bottom)); overflow-y:auto; }
+  .cxwv-body { display:flex; flex:1 0 auto; flex-direction:column; justify-content:center; }
+  .cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-bezel:7px; --cxwv-w:calc(100vw - 24px); --cxwv-screen-h:calc((var(--cxwv-w) - 2 * var(--cxwv-bezel)) * 9 / 16); }
+  .cxwv-phone__frame { border-radius:22px; }
+  .cxwv-phone__screen { border-radius:14px; }
+  .cxwv-phone__key { display:none; }
+}
+/* A phone held sideways (short and wide): the video takes the height; the title row gets compact. */
+@media (max-height:520px) and (orientation:landscape) {
+  .cxwv { padding:8px 16px; }
+  .cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-bezel:8px; --cxwv-w:min(100vw - 32px,(100svh - 84px) * 2 + 16px); --cxwv-screen-h:calc((var(--cxwv-w) - 2 * var(--cxwv-bezel)) / 2); }
+  .cxwv:is([data-kind="anime"],[data-kind="video"]) .cxwv-panel { height:auto; padding:0; overflow:visible; }
+  .cxwv-head { padding-bottom:8px; }
+  .cxwv-phone__key { display:none; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .cxwv,.cxwv-panel,.cxwv-close,.cxwv-phone.is-3d .cxwv-phone__screen { transition:none; }
+  .cxwv-panel { transform:none; }
+}

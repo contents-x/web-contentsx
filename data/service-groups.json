@@ -11,6 +11,13 @@
     "name": "Creative X",
     "eyebrow": "STORY × BRAND",
     "tagline": "価値を、伝わるカタチにする。",
-    "summary": "マンガ・アニメ・映像で、商品やサービスの価値を伝えます。"
+    "summary": "マンガ・アニメ・映像で、商品やサービスの価値を伝えます。",
+    "heroMedia": {
+      "wpType": "creative_hero",
+      "poster": "https://i.ytimg.com/vi/zKvRR8xT_zY/maxres1.jpg",
+      "posterWidth": 1280,
+      "posterHeight": 720,
+      "videos": []
+    }
   }
 ]

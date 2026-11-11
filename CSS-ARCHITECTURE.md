@@ -64,7 +64,7 @@ python3 tests/sitewide_check.py --base http://127.0.0.1:8791 --head http://127.0
 
 ### 共通部品にしたもの
 
-- 画像付きの案内カード `.cx-feature-card`（`css/feature-card.css`、#141）: 採用の職種カードを切り出した（2026-10-13、平澤さん決定。以前は「共通化しないもの」に入れていた）。サービスの Sales X / Creative X の一覧カードにも使用（段階2。`--wide` の横長写真・`--creative` のオレンジ・中に動画ボタンがあるためカード全体はリンクにせず下のボタンだけ押せる形。`.cxg-service-card` は再生中・準備中の目印として残し、カードの見た目の指定は持たない）。私たちについてのWHYでも再利用（#145、HEROの#140の後）。説明用のarticleに `--wide` / `--row-sp` を組み合わせ、About専用 `about-why.css` が並べ方・写真位置・ホバー抑止と中央カードの強調だけを持つ。共通カードCSSは変更しない。OUR ROLE（#149）でも再利用し、`about-our-role.css` が3列/縦並び、写真位置、中央の青枠、参照画像のテキストCTAと丸矢印の配置を担当する。
+- 画像付きの案内カード `.cx-feature-card`（`css/feature-card.css`、#141）: 採用の職種カードを切り出した（2026-10-13、平澤さん決定。以前は「共通化しないもの」に入れていた）。サービスの Sales X / Creative X の一覧カードにも使用（Creative X 紹介ページは2026-11から 03 CREATIVE SOLUTION の作品カード〈`css/service-creative-solution.css`〉に置き換え、今は Sales X だけ。段階2。`--wide` の横長写真・`--creative` のオレンジ・中に動画ボタンがあるためカード全体はリンクにせず下のボタンだけ押せる形。`.cxg-service-card` は再生中・準備中の目印として残し、カードの見た目の指定は持たない）。私たちについてのWHYでも再利用（#145、HEROの#140の後）。説明用のarticleに `--wide` / `--row-sp` を組み合わせ、About専用 `about-why.css` が並べ方・写真位置・ホバー抑止と中央カードの強調だけを持つ。共通カードCSSは変更しない。OUR ROLE（#149）でも再利用し、`about-our-role.css` が3列/縦並び、写真位置、中央の青枠、参照画像のテキストCTAと丸矢印の配置を担当する。
 
 About後半03–06（#151）は `about-late-2026.css` で構図を管理し、VALUES/FUTUREのカードは既存 `feature-card.css` を再利用する。VALUESは非操作article、FUTUREは実リンク。共通部品の基礎CSS・ブランドトークンは変更しない。
 
