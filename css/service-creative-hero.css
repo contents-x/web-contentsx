@@ -1,0 +1,110 @@
+/* Creative X landing — the stage: one showreel picture behind HERO, WORKS, 01 CREATIVE SOLUTION and
+   02 PRODUCTION FLOW (2026-11). The video is loaded and played once (.cxg-reel).
+   Behind the HERO the picture is sharp. From there on it is a clear blur, like the homepage backdrop
+   (.cxsb-backdrop): the video's colours and light stay visible, softened by a light ink veil and a glass
+   sheen, never a solid navy. Each section keeps its text readable with its own local panel or gradient.
+   js/service-creative-hero.js adds .is-live to the stage: the layer is fixed to the screen and clipped by
+   the stage (the homepage method, which also works on iOS), and the script writes the scroll progress:
+     on .cxg-reel        --cxg-blur (0–22px), --cxg-veil (0–.44), --cxg-glass (0–1), --cxg-zoom (1–1.06),
+                         --cxg-shade (1→0, the HERO copy's shade)
+     on .cxg-reel-hero   --cxg-copy (1→0)
+   Reduced motion: the same states, switched in two steps (no scroll-linked change) and no video.
+   JS off: the picture covers the HERO; the rest of the stage sits on its navy. */
+
+.cxg-stage { position:relative; isolation:isolate; background:var(--cx-color-ink); color:var(--cx-color-white); }
+.cxg-stage.is-live { clip-path:inset(0); }
+.cxg-stage :focus-visible { outline-color:var(--cx-color-white); }
+
+/* ---------- picture layer ---------- */
+.cxg-reel { position:absolute; z-index:0; top:0; right:0; left:0; height:100vh; height:100svh; min-height:560px; overflow:hidden; background:var(--cx-color-ink); pointer-events:none; }
+.cxg-stage.is-live .cxg-reel { position:fixed; inset:0; height:auto; min-height:0; }
+/* One filter on one layer: the blur, more colour and a little less light (a bright picture would wash out
+   the white text), growing with the blur. No extra layer is drawn for this. */
+.cxg-reel__frame { position:absolute; inset:0; transform:scale(var(--cxg-zoom,1)); filter:blur(var(--cxg-blur,0px)) saturate(calc(1 + var(--cxg-glass,0) * .4)) brightness(calc(1 - var(--cxg-glass,0) * .16)); }
+/* No filter while the picture is sharp: a blur(0) layer still costs a pass per video frame. */
+.cxg-reel.is-sharp .cxg-reel__frame,.cxg-stage:not(.is-live) .cxg-reel__frame { filter:none; transform:none; }
+.cxg-reel__poster,.cxg-reel__video { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; }
+.cxg-reel__video { opacity:0; transition:opacity .8s ease; }
+.cxg-reel.is-playing .cxg-reel__video { opacity:1; }
+/* White copy needs a darker picture behind it, but only there: a neutral (not navy) shade around the copy
+   at the bottom left and a light one under the header, so the HERO keeps the picture's own colours.
+   It goes with the copy (--cxg-shade). */
+.cxg-reel__shade { position:absolute; inset:0; opacity:var(--cxg-shade,1); background:
+  radial-gradient(72% 64% at 14% 84%,rgba(10,10,14,.56) 0%,rgba(10,10,14,.3) 46%,rgba(10,10,14,0) 76%),
+  linear-gradient(0deg,rgba(10,10,14,.3) 0%,rgba(10,10,14,0) 34%),
+  linear-gradient(180deg,rgba(10,10,14,.26) 0%,rgba(10,10,14,0) 16%); }
+.cxg-reel__veil { position:absolute; inset:0; background:var(--cx-color-ink); opacity:var(--cxg-veil,0); }
+/* Glass: a light sheen across the blur (the homepage's white veil, kept low for white text). */
+.cxg-reel::after { content:""; position:absolute; inset:0; opacity:var(--cxg-glass,0); background:
+  linear-gradient(115deg,rgba(255,255,255,.09) 0%,rgba(255,255,255,.03) 34%,rgba(255,255,255,0) 58%,rgba(255,255,255,.04) 100%),
+  radial-gradient(120% 80% at 85% 0%,rgba(255,255,255,.07),rgba(255,255,255,0) 60%); }
+/* Without the live layer the HERO picture runs out into the navy below. */
+.cxg-stage:not(.is-live) .cxg-reel__veil { background:linear-gradient(0deg,var(--cx-color-ink),rgba(7,20,59,0) 26%); opacity:1; }
+/* The end of the stage (after 03 FAQ / CONTACT): the blurred picture settles into the footer's navy. */
+.cxg-stage::after { content:""; position:relative; z-index:1; display:block; height:clamp(80px,9vw,140px); background:linear-gradient(180deg,rgba(7,20,59,0),rgba(7,20,59,.6) 55%,var(--cx-color-ink)); pointer-events:none; }
+
+/* ---------- HERO ---------- */
+/* padding:0 undoes the site-wide `section { padding:100px 0 }` (style.css). */
+.cxg-reel-hero { position:relative; z-index:1; height:100vh; height:100svh; min-height:560px; padding:0; }
+.cxg-reel-hero__inner { position:relative; display:flex; flex-direction:column; height:100%; padding-top:70px; padding-bottom:clamp(32px,7svh,88px); }
+.cxg-reel-hero .cxs-breadcrumbs { padding-block:0; }
+.cxg-reel-hero .cxs-breadcrumbs ol { align-items:center; color:rgba(255,255,255,.8); }
+.cxg-reel-hero .cxs-breadcrumbs li + li::before { color:rgba(255,255,255,.5); }
+.cxg-reel-hero .cxs-breadcrumbs a:hover { color:var(--cx-color-white); }
+.cxg-reel-hero__copy { max-width:min(100%,780px); margin-top:auto; }
+/* The shared .cx-image-text--light shadow is navy; over this picture a neutral one keeps the colours. */
+.cxg-reel-hero__copy.cx-image-text--light { text-shadow:0 2px 16px rgba(0,0,0,.5),0 0 2px rgba(0,0,0,.6); }
+.cxg-reel-hero h1 { margin:0; }
+.cxg-reel-hero__brand { display:flex; align-items:center; gap:14px; font:800 clamp(.95rem,1.3vw,1.2rem)/1.2 var(--cx-font-latin); letter-spacing:.12em; }
+.cxg-reel-hero__brand::before { content:""; flex:none; width:32px; height:3px; border-radius:2px; background:var(--cx-color-creative); }
+/* The title breaks only between its three phrases: 価値を、｜伝わる｜カタチにする。 */
+.cxg-reel-hero__title { display:block; max-width:7.4em; margin-top:clamp(12px,2svh,22px); font-family:var(--cx-font-ja); font-size:min(var(--cx-type-display),11vw); font-weight:var(--cx-weight-heading); line-height:1.18; letter-spacing:-.02em; }
+.cxg-reel-hero__title span { display:inline-block; }
+/* `.cxg p { margin:0 }` outranks a single class, hence the two-class selectors for margins on <p>. */
+.cxg-reel-hero .cxg-reel-hero__lead { margin-top:clamp(14px,2.4svh,26px); font-size:var(--cx-type-lead); font-weight:var(--cx-weight-lead); line-height:1.75; }
+.cxg-reel-hero__actions { display:flex; flex-wrap:wrap; gap:12px 14px; margin-top:clamp(20px,3.6svh,36px); }
+.cxg-reel-hero__button { display:inline-flex; align-items:center; justify-content:center; gap:18px; min-height:52px; padding:12px 28px; border:1.5px solid rgba(255,255,255,.72); border-radius:999px; background:rgba(0,0,0,.24); color:var(--cx-color-white); font-size:var(--cx-type-small); font-weight:var(--cx-weight-strong); letter-spacing:.04em; text-shadow:none; transition:transform var(--cx-motion-ui) var(--cx-motion-ease),background var(--cx-motion-fast) ease,border-color var(--cx-motion-fast) ease; }
+/* White on the vivid orange is under 4.5:1, so the main button is white with ink text (DESIGN-SYSTEM-2026.md). */
+.cxg-reel-hero__button--primary { border-color:var(--cx-color-white); background:var(--cx-color-white); color:var(--cx-color-ink); }
+.cxg-reel-hero__button--primary span[aria-hidden] { color:var(--cx-color-creative-text); }
+.cxg-reel-hero__button:focus-visible { outline:3px solid var(--cx-color-white); outline-offset:3px; }
+@media (hover:hover) {
+  .cxg-reel-hero__button:hover { transform:translateY(-2px); border-color:var(--cx-color-white); background:rgba(0,0,0,.42); }
+  .cxg-reel-hero__button--primary:hover { background:var(--cx-color-white); }
+}
+
+/* Pause / play for the moving background (WCAG 2.2.2) and a quiet SCROLL cue, bottom right. */
+.cxg-reel-hero__tools { position:absolute; right:var(--cxs-gutter-desktop); bottom:clamp(32px,7svh,88px); display:flex; align-items:flex-end; gap:18px; }
+.cxg-reel-hero__toggle { display:grid; place-items:center; width:44px; height:44px; padding:0; border:1.5px solid rgba(255,255,255,.72); border-radius:50%; background:rgba(0,0,0,.28); color:var(--cx-color-white); cursor:pointer; transition:background var(--cx-motion-fast) ease; }
+.cxg-reel-hero__toggle span { box-sizing:content-box; width:4px; height:14px; border-inline:4px solid currentColor; }
+.cxg-reel-hero__toggle[data-paused="true"] span { width:0; height:0; margin-left:4px; border-style:solid; border-width:8px 0 8px 13px; border-color:transparent transparent transparent currentColor; }
+.cxg-reel-hero__scroll { display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.82); font:700 var(--cx-type-label)/1 var(--cx-font-latin); letter-spacing:.28em; writing-mode:vertical-rl; }
+.cxg-reel-hero__scroll::after { content:""; width:1px; height:56px; background:linear-gradient(180deg,var(--cx-color-white),rgba(255,255,255,0)); }
+@media (hover:hover) { .cxg-reel-hero__toggle:hover { background:rgba(0,0,0,.46); } }
+
+/* Scroll: the copy fades and rises first. Faded links stop taking the pointer; a keyboard focus
+   inside the copy brings it back so a focused link is never invisible. */
+.cxg-stage.is-live :is(.cxg-reel-hero__copy,.cxg-reel-hero__tools,.cxg-reel-hero .cxs-breadcrumbs) { opacity:var(--cxg-copy,1); transform:translate3d(0,calc((var(--cxg-copy,1) - 1) * 40px),0); }
+.cxg-stage.is-copy-gone :is(.cxg-reel-hero__copy,.cxg-reel-hero__tools,.cxg-reel-hero .cxs-breadcrumbs) { pointer-events:none; }
+.cxg-stage.is-live .cxg-reel-hero__copy:focus-within,.cxg-stage.is-live .cxg-reel-hero__tools:focus-within { opacity:1; transform:none; pointer-events:auto; }
+
+@media (max-width:768px) {
+  .cxg-reel-hero__inner { padding-bottom:28px; }
+  .cxg-reel-hero__actions { gap:10px; }
+  .cxg-reel-hero__button { flex:1 1 200px; }
+  /* Phones: the toggle moves up beside the breadcrumbs so the stacked buttons keep the full width. */
+  .cxg-reel-hero__tools { top:70px; right:var(--cxs-gutter-mobile); bottom:auto; }
+  .cxg-reel-hero__scroll { display:none; }
+  .cxg-reel__shade { background:
+    radial-gradient(130% 62% at 30% 88%,rgba(10,10,14,.58) 0%,rgba(10,10,14,.3) 50%,rgba(10,10,14,0) 80%),
+    linear-gradient(180deg,rgba(10,10,14,.26) 0%,rgba(10,10,14,0) 16%); }
+}
+/* The fixed header is 56px tall up to 480px wide (style.css), 64px above. */
+@media (max-width:480px) {
+  .cxg-reel-hero__inner { padding-top:62px; }
+  .cxg-reel-hero__tools { top:62px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .cxg-reel__video,.cxg-reel-hero__button,.cxg-reel-hero__toggle { transition:none; }
+  .cxg-reel-hero__button:hover { transform:none; }
+}

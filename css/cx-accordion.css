@@ -1,0 +1,15 @@
+/* cxAccordion (js/cx-accordion.js): only the opening and closing. The look of the questions and answers is the
+   page's own (Creative X FAQ: css/service-creative-faq.css).
+   Before the script runs (or without JS) every panel is open. Once the list is .is-ready, a closed panel has
+   no height (grid rows 0fr ↔ 1fr, so the height follows the answer) and is hidden from screen readers and Tab
+   (visibility, switched after the close and before the open). The panel's only child holds the answer. */
+[data-cx-accordion-panel] { display: grid; grid-template-rows: 1fr; }
+[data-cx-accordion-panel] > * { min-height: 0; overflow: hidden; }
+[data-cx-accordion].is-ready [data-cx-accordion-panel] { transition: grid-template-rows .32s cubic-bezier(.16, 1, .3, 1); }
+[data-cx-accordion].is-ready [data-cx-accordion-panel]:not(.is-open) { grid-template-rows: 0fr; }
+[data-cx-accordion].is-ready [data-cx-accordion-panel] > * { transition: visibility 0s linear 0s; }
+[data-cx-accordion].is-ready [data-cx-accordion-panel]:not(.is-open) > * { visibility: hidden; transition-delay: .32s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-cx-accordion].is-ready [data-cx-accordion-panel],
+  [data-cx-accordion].is-ready [data-cx-accordion-panel] > * { transition: none; }
+}

@@ -40,6 +40,15 @@
   <link rel="stylesheet" href="/css/service-landing-2026.css">
   <link rel="stylesheet" href="/css/service-directory-2026.css">
   <link rel="stylesheet" href="/css/dl-modal.css">
+  <link rel="stylesheet" href="/css/home-creative-x.css">
+  <link rel="stylesheet" href="/css/cx-works.css">
+  <link rel="stylesheet" href="/css/cx-manga-book.css">
+  <link rel="stylesheet" href="/css/service-creative-hero.css">
+  <link rel="stylesheet" href="/css/service-creative-works.css">
+  <link rel="stylesheet" href="/css/service-creative-solution.css">
+  <link rel="stylesheet" href="/css/service-creative-flow.css">
+  <link rel="stylesheet" href="/css/cx-accordion.css">
+  <link rel="stylesheet" href="/css/service-creative-faq.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"ホーム","item":"https://contentsx.jp/"},{"@type":"ListItem","position":2,"name":"サービス","item":"https://contentsx.jp/services/"},{"@type":"ListItem","position":3,"name":"Creative X","item":"https://contentsx.jp/services/creative-x/"}]}</script>
   <link rel="stylesheet" href="/css/site-footer.css">
 </head>
@@ -60,47 +69,182 @@
   </header>
 <main class="cxs-page" id="main">
 <div class="cxg cxg--creative">
-  <section class="cxg-hero" aria-labelledby="cxg-title">
-    <div class="cxs-container">
-      <nav class="cxs-breadcrumbs" aria-label="パンくずリスト"><ol><li><a href="/">ホーム</a></li><li><a href="/services/">サービス</a></li><li aria-current="page">Creative X</li></ol></nav>
-      <div class="cxg-hero__inner">
-        <div class="cxg-hero__copy"><p class="cxg-kicker">STORY × BRAND</p><h1 id="cxg-title"><span>Creative X</span><small>価値を、伝わるカタチにする。</small></h1><p>マンガ・アニメ・映像の力で、<br>商品やサービスを使ったあとの変化をわかりやすく伝え、<br>企業の営業・マーケティング・採用を支援します。</p><a class="cxg-button" href="/contact">まずは相談する <span aria-hidden="true">→</span></a></div>
-        <div class="cxg-hero__image cxg-hero__image--creative"><img src="/material/service-2026/creative-hero-v2.webp" alt="マンガ・アニメ・映像の制作を表す女性と撮影カメラ" width="1536" height="1024" fetchpriority="high"></div>
+  <!-- One stage, one shared background (.cxg-reel, the HERO picture): HERO and WORKS (no section numbers), then
+       01 CREATIVE SOLUTION, 02 PRODUCTION FLOW and 03 FAQ / CONTACT. Sharp behind the HERO, a clear blur behind the
+       rest (2026-11 integration); the stage fades into the footer. -->
+  <div class="cxg-stage" data-cxg-stage>
+    <div class="cxg-reel" data-cxg-reel data-wp-type="creative_hero" data-sources="[]" aria-hidden="true">
+      <div class="cxg-reel__frame"><img class="cxg-reel__poster" src="https://i.ytimg.com/vi/zKvRR8xT_zY/maxres1.jpg" alt="" width="1280" height="720" fetchpriority="high" decoding="async"><video class="cxg-reel__video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback tabindex="-1"></video></div>
+      <div class="cxg-reel__shade"></div><div class="cxg-reel__veil"></div>
+    </div>
+    <section class="cxg-reel-hero" aria-labelledby="cxg-title">
+      <div class="cxs-container cxg-reel-hero__inner">
+        <nav class="cxs-breadcrumbs" aria-label="パンくずリスト"><ol><li><a href="/">ホーム</a></li><li><a href="/services/">サービス</a></li><li aria-current="page">Creative X</li></ol></nav>
+        <div class="cxg-reel-hero__copy cx-image-text--light" data-cxg-reel-copy>
+          <h1 id="cxg-title"><span class="cxg-reel-hero__brand" data-i18n-skip>Creative X</span><span class="cxg-reel-hero__title" data-i18n-html data-ja="価値を、伝わるカタチにする。" data-en="Value, in a form that lands."><span>価値を、</span><span>伝わる</span><span>カタチにする。</span></span></h1>
+          <p class="cxg-reel-hero__lead" data-ja="マンガ・アニメ・映像で、企業の魅力を届ける。" data-en="Manga, animation and video that carry what makes your company stand out.">マンガ・アニメ・映像で、企業の魅力を届ける。</p>
+          <div class="cxg-reel-hero__actions">
+            <a class="cxg-reel-hero__button cxg-reel-hero__button--primary" href="/services/creative-x/#works"><span data-ja="制作事例を見る" data-en="See our work">制作事例を見る</span><span aria-hidden="true">↓</span></a>
+            <a class="cxg-reel-hero__button" href="/contact"><span data-ja="お問い合わせ" data-en="Contact us">お問い合わせ</span><span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <div class="cxg-reel-hero__tools">
+          <button class="cxg-reel-hero__toggle" type="button" data-cxg-reel-toggle aria-label="背景の動画を一時停止" hidden><span aria-hidden="true"></span></button>
+          <span class="cxg-reel-hero__scroll" aria-hidden="true" data-i18n-skip>SCROLL</span>
+        </div>
       </div>
+    </section>
+    <!-- WORKS gallery: js/service-creative-works.js / css/service-creative-works.css. Works come from WordPress
+         (/works?site=contentsx = manga, /bizanime-videos = anime and video); without JS or data the three links
+         below stay. Behind the HERO stage (.cxg-stage) the blurred backdrop takes over from the HERO picture
+         through --cxw-handoff (SPEC.md §3.0「Creative X 紹介ページの WORKS」). -->
+    <section class="cxw" id="works" aria-labelledby="cxw-title" data-cxw data-cxw-mix="manga,anime,video">
+      <div class="cxw-backdrop" aria-hidden="true"><img class="cxw-backdrop__img" alt="" decoding="async"><img class="cxw-backdrop__img" alt="" decoding="async"><div class="cxw-backdrop__shade"></div></div>
+      <div class="cxs-container cxw-inner">
+        <div class="cxw-head">
+          <div class="cxw-heading">
+            <p class="cxw-eyebrow" data-i18n-skip>WORKS</p>
+            <h2 id="cxw-title" data-i18n-html data-ja="作品で見る <span>Creative X</span>" data-en="See <span>Creative X</span> at work">作品で見る <span>Creative X</span></h2>
+          </div>
+          <div class="cxw-filters" role="tablist" aria-label="作品の種類" data-cxw-filters hidden>
+            <button type="button" role="tab" id="cxw-tab-all" data-cxw-filter="all" aria-selected="true" aria-controls="cxw-gallery" data-i18n-skip>ALL<span class="cxw-filters__count" aria-hidden="true"></span></button>
+            <button type="button" role="tab" id="cxw-tab-manga" data-cxw-filter="manga" aria-selected="false" aria-controls="cxw-gallery" tabindex="-1" data-i18n-skip>MANGA<span class="cxw-filters__count" aria-hidden="true"></span></button>
+            <button type="button" role="tab" id="cxw-tab-anime" data-cxw-filter="anime" aria-selected="false" aria-controls="cxw-gallery" tabindex="-1" data-i18n-skip>ANIME<span class="cxw-filters__count" aria-hidden="true"></span></button>
+            <button type="button" role="tab" id="cxw-tab-video" data-cxw-filter="video" aria-selected="false" aria-controls="cxw-gallery" tabindex="-1" data-i18n-skip>VIDEO<span class="cxw-filters__count" aria-hidden="true"></span></button>
+          </div>
+        </div>
+        <p class="cxw-lead" data-ja="マンガ・アニメ・映像の作品を、ページを移動せずに読んだり再生したりできます。" data-en="Read and watch our manga, animation and video work without leaving this page.">マンガ・アニメ・映像の作品を、ページを移動せずに読んだり再生したりできます。</p>
+        <div class="cxw-gallery" id="cxw-gallery" data-cxw-gallery>
+          <ul class="cxw-fallback" data-cxw-fallback>
+            <li><a href="https://bizmanga.contentsx.jp/biz-library"><img src="/material/home-2026/creative-cards/bizmanga.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"><span class="cxw-fallback__kind" data-i18n-skip>MANGA</span><strong>ビズマンガ</strong><span data-ja="ビズ書庫でマンガを読む" data-en="Read manga in the BizManga library">ビズ書庫でマンガを読む</span></a></li>
+            <li><a href="https://bizmanga.contentsx.jp/bizanime"><img src="/material/home-2026/creative-cards/bizanime.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"><span class="cxw-fallback__kind" data-i18n-skip>ANIME</span><strong>ビズアニメ</strong><span data-ja="公式サイトで作品を見る" data-en="See works on the official site">公式サイトで作品を見る</span></a></li>
+            <li><a href="/services/#bizvideo"><img src="/material/home-2026/creative-cards/bizvideo.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"><span class="cxw-fallback__kind" data-i18n-skip>VIDEO</span><strong>ビズビデオ</strong><span data-ja="サービス一覧で作品を見る" data-en="See works in our service list">サービス一覧で作品を見る</span></a></li>
+          </ul>
+        </div>
+        <p class="cxw-note" data-ja="掲載作品には、自社オリジナル作品と制作サンプル（作例）を含みます。" data-en="Includes our original works and production samples.">掲載作品には、自社オリジナル作品と制作サンプル（作例）を含みます。</p>
+      </div>
+    </section>
+  <!-- 01 CREATIVE SOLUTION (2026-11): one message → three formats → one real work each → where it is used.
+       Cards: tools/build-services.py from data/creative-solution.json (WordPress ids only); the work, its
+       picture and the viewer come from WordPress in js/service-creative-solution.js (shared parts js/cx-works.js).
+       Without JS or data each card links to its service. css/service-creative-solution.css. SPEC.md §3.0 -->
+  <section class="cxcs" id="creative-solution" aria-labelledby="cxcs-title" data-cxcs>
+    <div class="cxcs-backdrop" aria-hidden="true" data-cxcs-backdrop></div>
+    <div class="cxcs-inner">
+      <div class="cxcs-head">
+        <p class="cxcs-index" data-i18n-skip><span>01</span> / CREATIVE SOLUTION</p>
+        <h2 class="cxcs-title" id="cxcs-title" data-i18n-html data-ja="&lt;span&gt;伝えたい価値を、&lt;/span&gt;&lt;span&gt;&lt;em&gt;最適なカタチ&lt;/em&gt;へ。&lt;/span&gt;" data-en="&lt;span&gt;Your value, &lt;/span&gt;&lt;span&gt;in &lt;em&gt;the form that fits&lt;/em&gt;.&lt;/span&gt;"><span>伝えたい価値を、</span><span><em>最適なカタチ</em>へ。</span></h2>
+        <p class="cxcs-lead" data-i18n-html data-ja="&lt;span&gt;目的に合わせて、&lt;/span&gt;&lt;span&gt;マンガ・アニメ・映像を使い分けます。&lt;/span&gt;" data-en="&lt;span&gt;Manga, animation or video, &lt;/span&gt;&lt;span&gt;chosen for what you want to achieve.&lt;/span&gt;"><span>目的に合わせて、</span><span>マンガ・アニメ・映像を使い分けます。</span></p>
+      </div>
+      <div class="cxcs-flow">
+        <div class="cxcs-source">
+          <svg class="cxcs-source__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M12 43V8.5A2.5 2.5 0 0 1 14.5 6h15A2.5 2.5 0 0 1 32 8.5V43M32 18h4.5a2.5 2.5 0 0 1 2.5 2.5V43M6 43h36M17.5 12h3m3.5 0h3M17.5 18h3m3.5 0h3M17.5 24h3m3.5 0h3M17.5 30h3m3.5 0h3M35 26h0.5M35 32h0.5M19.5 43v-6.5h5V43"/></svg>
+          <div class="cxcs-source__text">
+            <p class="cxcs-source__title" data-ja="企業が伝えたいこと" data-en="What your company wants to say">企業が伝えたいこと</p>
+            <p class="cxcs-source__desc" data-i18n-html data-ja="&lt;span&gt;商品の良さ・&lt;/span&gt;&lt;span&gt;導入後の変化・&lt;/span&gt;&lt;span&gt;会社の魅力 など&lt;/span&gt;" data-en="&lt;span&gt;Product strengths, &lt;/span&gt;&lt;span&gt;life after adoption, &lt;/span&gt;&lt;span&gt;your company's appeal and more&lt;/span&gt;"><span>商品の良さ・</span><span>導入後の変化・</span><span>会社の魅力 など</span></p>
+          </div>
+        </div>
+        <div class="cxcs-branch" aria-hidden="true"><i></i><i></i><i></i><ul class="cxcs-branch__map" data-i18n-skip><li>マンガ</li><li>アニメ</li><li>映像</li></ul></div>
+        <ul class="cxcs-cards" aria-label="表現ごとの代表作品">
+        <li class="cxcs-card cxcs-card--manga" id="cxcs-card-manga" data-cxcs-card data-kind="manga" data-work-id="opro-kamiless" data-open-ja="マンガを読む" data-open-en="Read the manga">
+          <div class="cxcs-card__head"><p class="cxcs-card__label" data-i18n-skip>BIZ MANGA</p><h3 class="cxcs-card__name">ビズマンガ</h3></div>
+          <div class="cxcs-card__media" data-cxcs-media><img class="cxcs-card__fallback" src="/material/home-2026/creative-cards/bizmanga.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"></div>
+          <div class="cxcs-card__body">
+            <p class="cxcs-card__title" data-cxcs-title data-i18n-skip hidden></p>
+            <p class="cxcs-card__desc" data-ja="ストーリーで、複雑な仕組みもわかりやすく伝える。" data-en="Stories that make complex ideas easy to follow.">ストーリーで、複雑な仕組みもわかりやすく伝える。</p>
+            <p class="cxcs-card__status" data-cxcs-status hidden></p>
+            <a class="cxcs-card__action" href="https://bizmanga.contentsx.jp/biz-library" data-cxcs-action><span data-ja="ビズ書庫で作品を見る" data-en="See works in the BizManga library">ビズ書庫で作品を見る</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </li>
+        <li class="cxcs-card cxcs-card--anime" id="cxcs-card-anime" data-cxcs-card data-kind="anime" data-work-id="V9ZC16hTlZI" data-open-ja="動画を見る" data-open-en="Watch the video">
+          <div class="cxcs-card__head"><p class="cxcs-card__label" data-i18n-skip>BIZ ANIME</p><h3 class="cxcs-card__name">ビズアニメ</h3></div>
+          <div class="cxcs-card__media" data-cxcs-media><img class="cxcs-card__fallback" src="/material/home-2026/creative-cards/bizanime.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"></div>
+          <div class="cxcs-card__body">
+            <p class="cxcs-card__title" data-cxcs-title data-i18n-skip hidden></p>
+            <p class="cxcs-card__desc" data-ja="動きと音で、感情に訴えかける印象的な映像に。" data-en="Motion and sound that leave a lasting impression.">動きと音で、感情に訴えかける印象的な映像に。</p>
+            <p class="cxcs-card__status" data-cxcs-status hidden></p>
+            <a class="cxcs-card__action" href="https://bizmanga.contentsx.jp/bizanime" data-cxcs-action><span data-ja="公式サイトで作品を見る" data-en="See works on the official site">公式サイトで作品を見る</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </li>
+        <li class="cxcs-card cxcs-card--video" id="cxcs-card-video" data-cxcs-card data-kind="video" data-work-id="QqRlb_JGaHw" data-open-ja="動画を見る" data-open-en="Watch the video">
+          <div class="cxcs-card__head"><p class="cxcs-card__label" data-i18n-skip>BIZ VIDEO</p><h3 class="cxcs-card__name">ビズビデオ</h3></div>
+          <div class="cxcs-card__media" data-cxcs-media><img class="cxcs-card__fallback" src="/material/home-2026/creative-cards/bizvideo.webp" width="1448" height="1086" alt="" loading="lazy" decoding="async"></div>
+          <div class="cxcs-card__body">
+            <p class="cxcs-card__title" data-cxcs-title data-i18n-skip hidden></p>
+            <p class="cxcs-card__desc" data-ja="リアルな質感で、企業の想いや魅力を伝える。" data-en="Real footage that conveys a company&#x27;s vision and appeal.">リアルな質感で、企業の想いや魅力を伝える。</p>
+            <p class="cxcs-card__status" data-cxcs-status hidden></p>
+            <a class="cxcs-card__action" href="/services/#bizvideo" data-cxcs-action><span data-ja="サービス一覧で作品を見る" data-en="See works in our service list">サービス一覧で作品を見る</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
+        </li>
+        </ul>
+        <div class="cxcs-down" aria-hidden="true"></div>
+      </div>
+      <div class="cxcs-uses">
+        <h3 class="cxcs-uses__title" data-ja="活用する場面" data-en="Where it works">活用する場面</h3>
+        <ul class="cxcs-uses__list">
+          <li><span class="cxcs-uses__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M2 8.5 5.5 6l4 1.6M22 8.5 18.5 6l-6.2 1.9-3.4 3.3a1.4 1.4 0 0 0 2 2l2.8-2.2L19 15.5l3-2.5M5 13.8l3.6 3.4a1.3 1.3 0 0 0 1.8-1.8M8.9 14.2l3 2.9a1.3 1.3 0 0 0 1.8-1.8M12 12.9l2.6 2.5a1.3 1.3 0 0 0 1.8-1.8M2 12.2l3 1.6"/></svg></span><span class="cxcs-uses__text"><strong data-ja="営業資料" data-en="Sales materials">営業資料</strong><span data-ja="提案・商談の理解促進に" data-en="Clearer proposals and meetings">提案・商談の理解促進に</span></span></li>
+          <li><span class="cxcs-uses__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="3" y="4" width="18" height="12.5" rx="1.8"/><path d="M8.5 20.5h7M12 16.5v4"/></svg></span><span class="cxcs-uses__text"><strong data-ja="Webサイト" data-en="Websites">Webサイト</strong><span data-ja="サービス・事例の訴求に" data-en="Showcasing services and cases">サービス・事例の訴求に</span></span></li>
+          <li><span class="cxcs-uses__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M3.5 10.2v3.6a1 1 0 0 0 1 1h2.3l6.2 4V5.2l-6.2 4H4.5a1 1 0 0 0-1 1ZM7.5 14.8l1.2 4.7M16.5 9.8a3.2 3.2 0 0 1 0 4.4M19 7.3a6.8 6.8 0 0 1 0 9.4"/></svg></span><span class="cxcs-uses__text"><strong data-ja="SNS広告" data-en="Social ads">SNS広告</strong><span data-ja="認知拡大・集客に" data-en="Reach and customer acquisition">認知拡大・集客に</span></span></li>
+          <li><span class="cxcs-uses__icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 5.2a3.5 3.5 0 0 1 0 6.6M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></svg></span><span class="cxcs-uses__text"><strong data-ja="採用活動" data-en="Recruiting">採用活動</strong><span data-ja="会社や仕事の魅力発信に" data-en="Sharing what makes your company and jobs attractive">会社や仕事の魅力発信に</span></span></li>
+        </ul>
+      </div>
+      <p class="cxcs-note" data-i18n-html data-ja="&lt;span&gt;1つの形式だけでも、&lt;/span&gt;&lt;span&gt;複数の組み合わせでも制作できます。&lt;/span&gt;" data-en="&lt;span&gt;One format on its own, &lt;/span&gt;&lt;span&gt;or several combined.&lt;/span&gt;"><span>1つの形式だけでも、</span><span>複数の組み合わせでも制作できます。</span></p>
     </div>
   </section>
-  <section class="cxg-section cxg-about" aria-labelledby="cxg-about">
-    <div class="cxs-container cxg-about__grid"><div><p class="cxg-index">01 <span>ABOUT</span></p><h2 id="cxg-about">商品・サービスの価値を、<br>伝わるカタチにする。</h2><p>導入後の変化を、買う前にイメージできる体験をつくります。マンガ・アニメ・映像を通じて、検討する人の理解を深め、営業・マーケティング・採用の成果につなげます。</p></div><div class="cxg-about__diagram"><div>わかりやすく<br>伝える</div><span aria-hidden="true">×</span><div>行動を<br>後押しする</div></div></div>
+  <!-- 02 PRODUCTION FLOW (2026-11 design: heading left, four-step timeline right; one column on phones).
+       No background of its own: the stage's blurred HERO picture shows through the glass cards (css/service-creative-flow.css).
+       Step pictures: material/service-2026/creative-flow/NN-name-{640,960}.webp, card-sized copies of the BizManga
+       production-flow illustrations in material/images/flow/ (replace a step by overwriting its two files). -->
+  <section class="cxg-section cxpf" aria-labelledby="cxg-flow" data-cxg-calm>
+    <div class="cxs-container cxpf-inner">
+      <div class="cxpf-head">
+        <p class="cxpf-index" data-i18n-skip><span>02</span> / PRODUCTION FLOW</p>
+        <h2 class="cxpf-title" id="cxg-flow" data-i18n-html data-ja="&lt;span&gt;ご相談から、&lt;/span&gt;&lt;span&gt;完成まで。&lt;/span&gt;" data-en="&lt;span&gt;From the first talk &lt;/span&gt;&lt;span&gt;to the finished work.&lt;/span&gt;"><span>ご相談から、</span><span>完成まで。</span></h2>
+        <p class="cxpf-lead" data-i18n-html data-ja="&lt;span&gt;企画・ストーリー設計から制作、納品まで。&lt;/span&gt;&lt;span&gt;一つひとつ確認しながら進めます。&lt;/span&gt;" data-en="&lt;span&gt;From planning and story design to production and delivery, &lt;/span&gt;&lt;span&gt;we check each step with you.&lt;/span&gt;"><span>企画・ストーリー設計から制作、納品まで。</span><span>一つひとつ確認しながら進めます。</span></p>
+      </div>
+      <ol class="cxpf-timeline">
+        <li class="cxpf-step"><div class="cxpf-card"><div class="cxpf-card__mark"><span class="cxpf-card__num" data-i18n-skip>01</span><svg class="cxpf-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4.5 5h15A1.5 1.5 0 0 1 21 6.5v8.5a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5v-3.5h-1A1.5 1.5 0 0 1 3 15V6.5A1.5 1.5 0 0 1 4.5 5z"/><path d="M8 10.8h.01M12 10.8h.01M16 10.8h.01"/></svg></div><div class="cxpf-card__body"><h3 class="cxpf-card__title" data-ja="ご相談・ヒアリング" data-en="Consultation and hearing">ご相談・ヒアリング</h3><p class="cxpf-card__desc" data-i18n-html data-ja="制作の目的、届けたい&lt;wbr&gt;相手、伝えたい&lt;wbr&gt;価値を&lt;wbr&gt;整理します。" data-en="We sort out the purpose, the audience and the value you want to convey.">制作の目的、届けたい<wbr>相手、伝えたい<wbr>価値を<wbr>整理します。</p><p class="cxpf-card__you"><svg class="cxpf-card__you-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20.5a7 7 0 0 1 14 0"/></svg><span><span class="cxpf-card__you-label" data-ja="お客様：" data-en="You: ">お客様：</span><span data-i18n-html data-ja="課題や&lt;wbr&gt;サービスの&lt;wbr&gt;資料を&lt;wbr&gt;共有" data-en="Share your challenges and service materials">課題や<wbr>サービスの<wbr>資料を<wbr>共有</span></span></p></div><img class="cxpf-card__img" src="/material/service-2026/creative-flow/01-hearing-960.webp" srcset="/material/service-2026/creative-flow/01-hearing-640.webp 640w, /material/service-2026/creative-flow/01-hearing-960.webp 960w" sizes="(max-width: 600px) calc(100vw - 72px), (max-width: 1100px) 46vw, 460px" width="960" height="536" alt="" loading="lazy" decoding="async"></div></li>
+        <li class="cxpf-step"><div class="cxpf-card"><div class="cxpf-card__mark"><span class="cxpf-card__num" data-i18n-skip>02</span><svg class="cxpf-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.5 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/><path d="M13.5 3v4.5H18"/><path d="M8.5 12h5M8.5 15.5h3"/><path d="m21 11.2-5.6 5.6-2.4.6.6-2.4 5.6-5.6a1.2 1.2 0 0 1 1.8 1.8z"/></svg></div><div class="cxpf-card__body"><h3 class="cxpf-card__title" data-ja="企画・ストーリー設計" data-en="Planning and story design">企画・ストーリー設計</h3><p class="cxpf-card__desc" data-i18n-html data-ja="伝える内容を&lt;wbr&gt;整理し、構成・シナリオ・&lt;wbr&gt;絵コンテなどを&lt;wbr&gt;制作します。" data-en="We shape the message into a structure, scenario and storyboards.">伝える内容を<wbr>整理し、構成・シナリオ・<wbr>絵コンテなどを<wbr>制作します。</p><p class="cxpf-card__you"><svg class="cxpf-card__you-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20.5a7 7 0 0 1 14 0"/></svg><span><span class="cxpf-card__you-label" data-ja="お客様：" data-en="You: ">お客様：</span><span data-i18n-html data-ja="企画内容を&lt;wbr&gt;確認" data-en="Review the plan">企画内容を<wbr>確認</span></span></p></div><img class="cxpf-card__img" src="/material/service-2026/creative-flow/02-story-960.webp" srcset="/material/service-2026/creative-flow/02-story-640.webp 640w, /material/service-2026/creative-flow/02-story-960.webp 960w" sizes="(max-width: 600px) calc(100vw - 72px), (max-width: 1100px) 46vw, 460px" width="960" height="536" alt="" loading="lazy" decoding="async"></div></li>
+        <li class="cxpf-step"><div class="cxpf-card"><div class="cxpf-card__mark"><span class="cxpf-card__num" data-i18n-skip>03</span><svg class="cxpf-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3.5 9.5h17v9.5a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z"/><path d="M3.4 9.5 2.9 6.5a1 1 0 0 1 .8-1.2l14.6-2.6a1 1 0 0 1 1.2.8l.5 3z"/><path d="m7.4 4.6 2.4 3.6M12.3 3.7l2.4 3.6"/><path d="m10.5 12.6 4 2.4-4 2.4z"/></svg></div><div class="cxpf-card__body"><h3 class="cxpf-card__title" data-ja="制作・確認" data-en="Production and review">制作・確認</h3><p class="cxpf-card__desc" data-i18n-html data-ja="マンガの作画、アニメーション、&lt;wbr&gt;映像制作を&lt;wbr&gt;進めます。" data-en="We draw the manga, animate and produce the video.">マンガの作画、アニメーション、<wbr>映像制作を<wbr>進めます。</p><p class="cxpf-card__you"><svg class="cxpf-card__you-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20.5a7 7 0 0 1 14 0"/></svg><span><span class="cxpf-card__you-label" data-ja="お客様：" data-en="You: ">お客様：</span><span data-i18n-html data-ja="所定の&lt;wbr&gt;確認段階で&lt;wbr&gt;内容を&lt;wbr&gt;チェック" data-en="Check the work at the set review stages">所定の<wbr>確認段階で<wbr>内容を<wbr>チェック</span></span></p></div><img class="cxpf-card__img" src="/material/service-2026/creative-flow/03-production-960.webp" srcset="/material/service-2026/creative-flow/03-production-640.webp 640w, /material/service-2026/creative-flow/03-production-960.webp 960w" sizes="(max-width: 600px) calc(100vw - 72px), (max-width: 1100px) 46vw, 460px" width="960" height="536" alt="" loading="lazy" decoding="async"></div></li>
+        <li class="cxpf-step"><div class="cxpf-card"><div class="cxpf-card__mark"><span class="cxpf-card__num" data-i18n-skip>04</span><svg class="cxpf-card__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11.5v8A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-8"/><path d="M4 11.5h4.5l1.5 2.5h4l1.5-2.5H20"/><path d="M12 3v7.5M8.8 7.4 12 10.6l3.2-3.2"/></svg></div><div class="cxpf-card__body"><h3 class="cxpf-card__title" data-ja="納品・活用" data-en="Delivery and use">納品・活用</h3><p class="cxpf-card__desc" data-i18n-html data-ja="完成作品を&lt;wbr&gt;納品し、用途に&lt;wbr&gt;応じた&lt;wbr&gt;活用方法を&lt;wbr&gt;ご案内します。" data-en="We deliver the finished work and show how to put it to use.">完成作品を<wbr>納品し、用途に<wbr>応じた<wbr>活用方法を<wbr>ご案内します。</p><p class="cxpf-card__you"><svg class="cxpf-card__you-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"/><path d="M5 20.5a7 7 0 0 1 14 0"/></svg><span><span class="cxpf-card__you-label" data-ja="お客様：" data-en="You: ">お客様：</span><span data-i18n-html data-ja="営業・Web・&lt;wbr&gt;広告などで&lt;wbr&gt;活用" data-en="Use it in sales, on the web, in ads and more">営業・Web・<wbr>広告などで<wbr>活用</span></span></p></div><img class="cxpf-card__img" src="/material/service-2026/creative-flow/04-delivery-960.webp" srcset="/material/service-2026/creative-flow/04-delivery-640.webp 640w, /material/service-2026/creative-flow/04-delivery-960.webp 960w" sizes="(max-width: 600px) calc(100vw - 72px), (max-width: 1100px) 46vw, 460px" width="960" height="536" alt="" loading="lazy" decoding="async"></div></li>
+      </ol>
+    </div>
   </section>
-  <section class="cxg-section cxg-section--tint" aria-labelledby="cxg-reasons">
-    <div class="cxs-container"><p class="cxg-index">02 <span>WHY CREATIVE X</span></p><h2 id="cxg-reasons">選ばれる3つの理由</h2><div class="cxg-reasons"><article><span aria-hidden="true">01</span><h3>複雑な内容も、わかりやすく伝えられる</h3><p>専門的なサービスや導入後の変化を、物語や映像で具体的に伝えられます。</p></article><article><span aria-hidden="true">02</span><h3>検討する人それぞれに届くコンテンツ</h3><p>担当者だけでなく、上司や決裁者にも同じ内容をわかりやすく共有できます。</p></article><article><span aria-hidden="true">03</span><h3>営業・マーケティング・採用に活用できる</h3><p>提案資料、Web、SNS、採用など、さまざまな場面で使えます。</p></article></div></div>
+  <!-- 03 FAQ / CONTACT (2026-11 design): FAQ heading left and five questions right (one column on phones), then
+       the CONTACT panel. On the stage, so the blurred HERO picture continues behind it (css/service-creative-faq.css).
+       Questions and answers are in the HTML (js/cx-accordion.js opens / closes them; without JS all are shown).
+       data-cx-page-cta: the footer leaves out its own contact block on this page (css/site-footer.css). -->
+  <section class="cxg-section cxfq" id="creative-faq" aria-labelledby="cxfq-title" data-cxg-still>
+    <div class="cxs-container">
+      <div class="cxfq-top">
+        <div class="cxfq-head">
+          <p class="cxfq-index" data-i18n-skip><span>03</span> / FAQ</p>
+          <h2 class="cxfq-title" id="cxfq-title" data-ja="よくあるご質問" data-en="FAQ">よくあるご質問</h2>
+          <p class="cxfq-lead" data-i18n-html data-ja="&lt;span&gt;制作について、&lt;/span&gt;&lt;span&gt;よくいただくご質問を&lt;/span&gt;&lt;span&gt;まとめました。&lt;/span&gt;" data-en="&lt;span&gt;Questions we are often asked &lt;/span&gt;&lt;span&gt;about production.&lt;/span&gt;"><span>制作について、</span><span>よくいただくご質問を</span><span>まとめました。</span></p>
+        </div>
+        <div class="cxfq-list" data-cx-accordion>
+          <div class="cxfq-item" data-cx-accordion-item><h3 class="cxfq-q"><button class="cxfq-q__button" type="button" id="cxfq-q01" aria-controls="cxfq-a01" aria-expanded="true" data-cx-accordion-trigger><span class="cxfq-q__num" data-i18n-skip><span>Q</span>01</span><span class="cxfq-q__text" data-i18n-html data-ja="何をつくるか&lt;wbr&gt;決まっていなくても&lt;wbr&gt;相談できますか？" data-en="Can I talk to you before deciding what to make?">何をつくるか<wbr>決まっていなくても<wbr>相談できますか？</span><span class="cxfq-q__icon" aria-hidden="true"></span></button></h3><div class="cxfq-a" id="cxfq-a01" role="region" aria-labelledby="cxfq-q01" data-cx-accordion-panel><div class="cxfq-a__inner"><p data-i18n-html data-ja="はい。&lt;wbr&gt;制作する&lt;wbr&gt;形式が&lt;wbr&gt;決まっていなくても&lt;wbr&gt;ご相談いただけます。&lt;wbr&gt;伝えたい&lt;wbr&gt;内容や&lt;wbr&gt;活用目的を&lt;wbr&gt;うかがい、&lt;wbr&gt;マンガ・アニメ・映像の&lt;wbr&gt;中から&lt;wbr&gt;適した&lt;wbr&gt;表現方法を&lt;wbr&gt;ご提案します。" data-en="Yes. You can talk to us before choosing a format. We listen to what you want to convey and how you will use it, and suggest the right form: manga, animation or video.">はい。<wbr>制作する<wbr>形式が<wbr>決まっていなくても<wbr>ご相談いただけます。<wbr>伝えたい<wbr>内容や<wbr>活用目的を<wbr>うかがい、<wbr>マンガ・アニメ・映像の<wbr>中から<wbr>適した<wbr>表現方法を<wbr>ご提案します。</p></div></div></div>
+          <div class="cxfq-item" data-cx-accordion-item><h3 class="cxfq-q"><button class="cxfq-q__button" type="button" id="cxfq-q02" aria-controls="cxfq-a02" aria-expanded="true" data-cx-accordion-trigger><span class="cxfq-q__num" data-i18n-skip><span>Q</span>02</span><span class="cxfq-q__text" data-i18n-html data-ja="マンガ・アニメ・映像は&lt;wbr&gt;1つだけでも&lt;wbr&gt;依頼できますか？" data-en="Can I order just one of manga, animation or video?">マンガ・アニメ・映像は<wbr>1つだけでも<wbr>依頼できますか？</span><span class="cxfq-q__icon" aria-hidden="true"></span></button></h3><div class="cxfq-a" id="cxfq-a02" role="region" aria-labelledby="cxfq-q02" data-cx-accordion-panel><div class="cxfq-a__inner"><p data-i18n-html data-ja="はい。&lt;wbr&gt;それぞれ&lt;wbr&gt;単独での&lt;wbr&gt;制作にも&lt;wbr&gt;対応しています。&lt;wbr&gt;複数の&lt;wbr&gt;形式を&lt;wbr&gt;組み合わせ、&lt;wbr&gt;用途に&lt;wbr&gt;応じて&lt;wbr&gt;展開する&lt;wbr&gt;ことも&lt;wbr&gt;可能です。" data-en="Yes. Each can be made on its own. Several formats can also be combined and rolled out to fit their uses.">はい。<wbr>それぞれ<wbr>単独での<wbr>制作にも<wbr>対応しています。<wbr>複数の<wbr>形式を<wbr>組み合わせ、<wbr>用途に<wbr>応じて<wbr>展開する<wbr>ことも<wbr>可能です。</p></div></div></div>
+          <div class="cxfq-item" data-cx-accordion-item><h3 class="cxfq-q"><button class="cxfq-q__button" type="button" id="cxfq-q03" aria-controls="cxfq-a03" aria-expanded="true" data-cx-accordion-trigger><span class="cxfq-q__num" data-i18n-skip><span>Q</span>03</span><span class="cxfq-q__text" data-i18n-html data-ja="料金や&lt;wbr&gt;制作期間は&lt;wbr&gt;どれくらいですか？" data-en="What does it cost and how long does it take?">料金や<wbr>制作期間は<wbr>どれくらいですか？</span><span class="cxfq-q__icon" aria-hidden="true"></span></button></h3><div class="cxfq-a" id="cxfq-a03" role="region" aria-labelledby="cxfq-q03" data-cx-accordion-panel><div class="cxfq-a__inner"><p data-i18n-html data-ja="制作する&lt;wbr&gt;形式や&lt;wbr&gt;内容、&lt;wbr&gt;ページ数、&lt;wbr&gt;動画の&lt;wbr&gt;尺などに&lt;wbr&gt;よって&lt;wbr&gt;異なります。&lt;wbr&gt;ご希望を&lt;wbr&gt;うかがった&lt;wbr&gt;うえで、&lt;wbr&gt;お見積もりと&lt;wbr&gt;制作スケジュールを&lt;wbr&gt;ご案内します。" data-en="It depends on the format, the content, the number of pages, the length of the video and so on. After hearing what you need, we send an estimate and a schedule.">制作する<wbr>形式や<wbr>内容、<wbr>ページ数、<wbr>動画の<wbr>尺などに<wbr>よって<wbr>異なります。<wbr>ご希望を<wbr>うかがった<wbr>うえで、<wbr>お見積もりと<wbr>制作スケジュールを<wbr>ご案内します。</p></div></div></div>
+          <div class="cxfq-item" data-cx-accordion-item><h3 class="cxfq-q"><button class="cxfq-q__button" type="button" id="cxfq-q04" aria-controls="cxfq-a04" aria-expanded="true" data-cx-accordion-trigger><span class="cxfq-q__num" data-i18n-skip><span>Q</span>04</span><span class="cxfq-q__text" data-i18n-html data-ja="依頼前に&lt;wbr&gt;何を準備すれば&lt;wbr&gt;よいですか？" data-en="What should I prepare before asking?">依頼前に<wbr>何を準備すれば<wbr>よいですか？</span><span class="cxfq-q__icon" aria-hidden="true"></span></button></h3><div class="cxfq-a" id="cxfq-a04" role="region" aria-labelledby="cxfq-q04" data-cx-accordion-panel><div class="cxfq-a__inner"><p data-i18n-html data-ja="商品・サービスの&lt;wbr&gt;概要や、&lt;wbr&gt;伝えたい&lt;wbr&gt;内容、&lt;wbr&gt;利用予定の&lt;wbr&gt;媒体などが&lt;wbr&gt;あれば&lt;wbr&gt;お知らせください。&lt;wbr&gt;具体的な&lt;wbr&gt;企画が&lt;wbr&gt;決まっていない&lt;wbr&gt;段階でも&lt;wbr&gt;ご相談いただけます。" data-en="If you have them, tell us about your product or service, what you want to convey and where it will be used. You can also talk to us before there is a concrete plan.">商品・サービスの<wbr>概要や、<wbr>伝えたい<wbr>内容、<wbr>利用予定の<wbr>媒体などが<wbr>あれば<wbr>お知らせください。<wbr>具体的な<wbr>企画が<wbr>決まっていない<wbr>段階でも<wbr>ご相談いただけます。</p></div></div></div>
+          <div class="cxfq-item" data-cx-accordion-item><h3 class="cxfq-q"><button class="cxfq-q__button" type="button" id="cxfq-q05" aria-controls="cxfq-a05" aria-expanded="true" data-cx-accordion-trigger><span class="cxfq-q__num" data-i18n-skip><span>Q</span>05</span><span class="cxfq-q__text" data-i18n-html data-ja="制作途中で&lt;wbr&gt;内容を&lt;wbr&gt;確認できますか？" data-en="Can I check the work while it is being made?">制作途中で<wbr>内容を<wbr>確認できますか？</span><span class="cxfq-q__icon" aria-hidden="true"></span></button></h3><div class="cxfq-a" id="cxfq-a05" role="region" aria-labelledby="cxfq-q05" data-cx-accordion-panel><div class="cxfq-a__inner"><p data-i18n-html data-ja="はい。&lt;wbr&gt;企画・構成や&lt;wbr&gt;制作途中の&lt;wbr&gt;確認段階を&lt;wbr&gt;設け、&lt;wbr&gt;内容を&lt;wbr&gt;確認しながら&lt;wbr&gt;進めます。&lt;wbr&gt;具体的な&lt;wbr&gt;確認タイミングや&lt;wbr&gt;修正条件は、&lt;wbr&gt;ご依頼内容に&lt;wbr&gt;応じて&lt;wbr&gt;事前に&lt;wbr&gt;ご案内します。" data-en="Yes. There are review stages for the plan and structure and during production, so we go ahead as you check the work. The exact review points and revision terms are set out in advance for each request.">はい。<wbr>企画・構成や<wbr>制作途中の<wbr>確認段階を<wbr>設け、<wbr>内容を<wbr>確認しながら<wbr>進めます。<wbr>具体的な<wbr>確認タイミングや<wbr>修正条件は、<wbr>ご依頼内容に<wbr>応じて<wbr>事前に<wbr>ご案内します。</p></div></div></div>
+          <p class="cxfq-more"><a href="/faq" data-ja="よくあるご質問をもっと見る" data-en="More questions and answers">よくあるご質問をもっと見る</a></p>
+        </div>
+      </div>
+      <section class="cxfq-contact" aria-labelledby="cxg-contact" data-cx-page-cta>
+        <div class="cxfq-contact__copy">
+          <p class="cxfq-contact__label" data-i18n-skip>CONTACT US</p>
+          <h2 class="cxfq-contact__title" id="cxg-contact" data-i18n-html data-ja="&lt;span&gt;まずは、&lt;/span&gt;&lt;span&gt;つくりたいことを&lt;/span&gt;&lt;span&gt;お聞かせください。&lt;/span&gt;" data-en="&lt;span&gt;First, tell us &lt;/span&gt;&lt;span&gt;what you want to make.&lt;/span&gt;"><span>まずは、</span><span>つくりたいことを</span><span>お聞かせください。</span></h2>
+          <p class="cxfq-contact__text" data-i18n-html data-ja="&lt;span&gt;制作する&lt;wbr&gt;形式が&lt;wbr&gt;決まっていなくても&lt;wbr&gt;構いません。&lt;/span&gt;&lt;span&gt;目的や&lt;wbr&gt;課題を&lt;wbr&gt;うかがい、&lt;wbr&gt;適した&lt;wbr&gt;表現方法を&lt;wbr&gt;ご提案します。&lt;/span&gt;" data-en="&lt;span&gt;You do not need to have chosen a format. &lt;/span&gt;&lt;span&gt;We hear your goals and challenges and suggest how best to express them.&lt;/span&gt;"><span>制作する<wbr>形式が<wbr>決まっていなくても<wbr>構いません。</span><span>目的や<wbr>課題を<wbr>うかがい、<wbr>適した<wbr>表現方法を<wbr>ご提案します。</span></p>
+        </div>
+        <div class="cxfq-contact__actions">
+          <a class="cxg-button cxfq-cta" href="/contact"><svg class="cxfq-cta__mail" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.8 7 8.2 6 8.2-6"/></svg><span data-ja="制作について相談する" data-en="Talk to us about a project">制作について相談する</span><svg class="cxfq-cta__arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+          <a class="cxfq-dl js-dl-trigger" href="/contact"><span data-ja="資料をダウンロードする" data-en="Download the brochure">資料をダウンロードする</span> <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>
+    </div>
   </section>
-  <section class="cxg-section" aria-labelledby="cxg-three"><div class="cxs-container"><p class="cxg-index">03 <span>SERVICES</span></p><div class="cxg-heading"><h2 id="cxg-three">マンガ・アニメ・映像の制作</h2><p>企画から仕上げまで、目的に合わせたコンテンツを制作します。</p></div><div class="cxg-overview-grid cxg-overview-grid--three"><article class="cx-feature-card cx-feature-card--wide cx-feature-card--creative cx-ui-card cxg-service-card cxg-service-card--bizmanga">
-  <div class="cx-feature-card__media"><img src="/material/service-2026/manga-justice-cover.webp" alt="" width="1407" height="2000" loading="lazy"><span class="cx-feature-card__no" aria-hidden="true"><span class="cx-feature-card__num">01</span><span class="cx-feature-card__label">BIZMANGA</span></span></div>
-  <div class="cx-feature-card__body">
-    <div class="cx-feature-card__row"><div class="cx-feature-card__text"><h3 class="cx-feature-card__title">ビズマンガ</h3><p class="cx-feature-card__desc">導入前の悩みから導入後の変化までを物語で描き、読む人が自社で使う場面を具体的にイメージできるようにします。</p></div></div>
-    <div class="cx-feature-card__types"><span>マンガ制作</span><span>営業資料</span></div>
-    <a class="cx-feature-card__more" href="https://bizmanga.contentsx.jp/"><span>公式サイトを見る</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </div>
-</article>
-<article class="cx-feature-card cx-feature-card--wide cx-feature-card--creative cx-ui-card cxg-service-card cxg-service-card--bizanime">
-  <div class="cx-feature-card__media"><button class="cxg-video-play" type="button" data-wp-slot="cx-services-bizanime" data-wp-label="ビズアニメ制作事例" data-video-src="/material/service-2026/bizanime-ieye.mp4" data-caption-src="/material/service-2026/bizanime-ieye.ja.vtt" aria-label="ビズアニメ制作事例「I eye」を音声付きで再生"><img src="/material/service-2026/bizanime-ieye.jpg" alt="" width="1280" height="720" loading="lazy"><span class="cxg-video-play__icon" aria-hidden="true">▶</span><span class="cxg-video-play__caption" aria-hidden="true">動画を再生</span></button><span class="cx-feature-card__no" aria-hidden="true"><span class="cx-feature-card__num">02</span><span class="cx-feature-card__label">BIZANIME</span></span></div>
-  <div class="cx-feature-card__body">
-    <div class="cx-feature-card__row"><div class="cx-feature-card__text"><h3 class="cx-feature-card__title">ビズアニメ</h3><p class="cx-feature-card__desc">サービスを使う場面とその後の変化を短いアニメーションで伝え、広告やSNSで興味喚起につなげます。</p></div></div>
-    <div class="cx-feature-card__types"><span>アニメーション</span><span>SNS</span></div>
-    <a class="cx-feature-card__more" href="https://bizmanga.contentsx.jp/bizanime"><span>公式サイトを見る</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-  </div>
-</article>
-<article class="cx-feature-card cx-feature-card--wide cx-feature-card--creative cx-ui-card cxg-service-card cxg-service-card--bizvideo">
-  <div class="cx-feature-card__media"><button class="cxg-video-play" type="button" data-wp-slot="cx-services-bizvideo" data-wp-label="ビズビデオ制作事例" data-video-src="/material/service-2026/bizvideo-memory-town.mp4" data-caption-src="/material/service-2026/bizvideo-memory-town.ja.vtt" aria-label="ビズビデオ制作事例「私を置いて、記憶だけ残った街」を音声付きで再生"><img src="/material/service-2026/bizvideo-memory-town.jpg" alt="" width="1280" height="720" loading="lazy"><span class="cxg-video-play__icon" aria-hidden="true">▶</span><span class="cxg-video-play__caption" aria-hidden="true">動画を再生</span></button><span class="cx-feature-card__no" aria-hidden="true"><span class="cx-feature-card__num">03</span><span class="cx-feature-card__label">BIZVIDEO</span></span></div>
-  <div class="cx-feature-card__body">
-    <div class="cx-feature-card__row"><div class="cx-feature-card__text"><h3 class="cx-feature-card__title">ビズビデオ</h3><p class="cx-feature-card__desc">商品やサービスの動き、使い方、導入後の様子を短い映像で伝えます。</p></div></div>
-    <div class="cx-feature-card__types"><span>動画制作</span><span>展示会</span></div>
-    <a class="cx-feature-card__more" href="/contact"><span>制作について相談</span><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-  </div>
-</article></div></div></section>
-  <section class="cxg-section cxg-section--tint" aria-labelledby="cxg-flow"><div class="cxs-container"><p class="cxg-index">04 <span>PROCESS</span></p><div class="cxg-heading"><h2 id="cxg-flow">企画から公開まで、一気通貫でサポート</h2><p>制作体制と、活用までを見据えた伴走を両立します。</p></div><ol class="cxg-process"><li><span>01</span><h3>企画・ヒアリング</h3><p>目的やターゲットを整理し、最適な企画をご提案します。</p></li><li><span>02</span><h3>シナリオ・構成</h3><p>伝える内容をシナリオや絵コンテにまとめます。</p></li><li><span>03</span><h3>制作</h3><p>マンガ・アニメ・映像を制作します。</p></li><li><span>04</span><h3>納品・活用支援</h3><p>公開後の活用方法までサポートします。</p></li></ol></div></section>
-  <section class="cxg-section cxg-contact" data-cx-page-cta aria-labelledby="cxg-contact"><div class="cxs-container cxg-contact__inner"><div><p class="cxg-index">05 <span>CONTACT</span></p><h2 id="cxg-contact">まずはご相談ください</h2><p>目的やご予算に合わせて、最適なご提案をいたします。企画段階からでもお気軽にご相談ください。</p><div class="cxg-contact__actions"><a class="cxg-button" href="/contact">お問い合わせ <span aria-hidden="true">→</span></a><a class="cxg-button cxg-button--outline js-dl-trigger" href="/contact">資料をダウンロードする <span aria-hidden="true">↓</span></a></div></div><img src="/material/service-2026/creative-process.jpg" alt="マンガの制作工程" width="1944" height="809" loading="lazy"></div></section>
 </div>
 
 </main>
@@ -166,5 +310,13 @@
 <script src="/js/wp-config.js" defer></script>
 <script src="/js/service-media.js" defer></script>
 <script src="/js/sitewide-motion.js" defer></script>
+<script src="/js/cx-dom.js" defer></script>
+<script src="/js/cx-manga-reader.js" defer></script>
+<script src="/js/cx-video-player.js" defer></script>
+<script src="/js/cx-works.js" defer></script>
+<script src="/js/service-creative-works.js" defer></script>
+<script src="/js/service-creative-solution.js" defer></script>
+<script src="/js/service-creative-hero.js" defer></script>
+<script src="/js/cx-accordion.js" defer></script>
 </body>
 </html>

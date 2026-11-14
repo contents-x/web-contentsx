@@ -1,0 +1,201 @@
+/* Creative X landing — 01 CREATIVE SOLUTION (2026-11, approved design「伝えたい価値を、最適なカタチへ。」).
+   Flow: heading → 「企業が伝えたいこと」 panel → a line that splits three ways → one real work per format
+   (js/service-creative-solution.js fills them from WordPress; js/cx-works.js opens them) → arrow →
+   「活用する場面」 → note.
+   PC (1101px+): three cards in a row under the split line. 769–1100px: the same, smaller.
+   Up to 768px: one column; the split line points at three small labels, then the cards follow
+   (600–768px: picture left, text right).
+   Backdrop: CSS only (no image file). With the HERO showreel on the page its poster is reused, blurred
+   and darker (.has-hero-backdrop); inside the HERO stage the section is transparent (.cxcs--on-stage).
+   `.cxg p { margin:0 }` outranks one class, hence `.cxcs .cxcs-…` where a <p> needs margins or sizes. */
+
+.cxcs {
+  --cxcs-manga: var(--cx-color-creative);
+  --cxcs-anime: #2e78fb;    /* Sales X blue lifted for the dark backdrop (approved design) */
+  --cxcs-video: #8f5cff;    /* approved design only; see DESIGN-SYSTEM-2026.md */
+  --cxcs-line: var(--cx-color-creative);
+  --cxcs-soft: rgba(255,255,255,.8);
+  --cxcs-edge: rgba(255,255,255,.2);
+  --cxcs-gap: clamp(16px,1.6vw,26px);      /* between the cards; the split line ends at their centres */
+  position:relative; isolation:isolate; overflow:hidden;
+  padding:clamp(64px,7vw,112px) 0 clamp(64px,6.6vw,104px);
+  background:var(--cx-color-ink); color:var(--cx-color-white);
+}
+.cxcs :focus-visible { outline:3px solid var(--cx-color-white); outline-offset:3px; }
+
+/* ---------- backdrop ---------- */
+.cxcs-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; background:
+  radial-gradient(55% 40% at 8% 6%,rgba(58,86,150,.5),rgba(58,86,150,0) 72%),
+  radial-gradient(38% 32% at 92% 14%,rgba(92,112,160,.3),rgba(92,112,160,0) 70%),
+  radial-gradient(42% 36% at 90% 90%,rgba(250,77,18,.14),rgba(250,77,18,0) 72%),
+  radial-gradient(50% 42% at 6% 94%,rgba(40,66,128,.42),rgba(40,66,128,0) 72%),
+  linear-gradient(180deg,#0b1a42 0%,var(--cx-color-ink) 45%,#060f2c 100%); }
+/* The HERO poster, further blurred and darker than behind WORKS. */
+.cxcs-backdrop__img { position:absolute; top:-48px; left:-48px; width:calc(100% + 96px); height:calc(100% + 96px); object-fit:cover; filter:blur(28px) saturate(1.05); opacity:0; transition:opacity .8s ease; }
+.cxcs-backdrop::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(7,20,59,.74),rgba(7,20,59,.56) 30%,rgba(7,20,59,.78)); opacity:0; }
+.cxcs.has-hero-backdrop .cxcs-backdrop__img { opacity:.6; }
+.cxcs.has-hero-backdrop .cxcs-backdrop::after { opacity:1; }
+/* Inside the HERO stage: the blurred showreel shows through (a clear glass, not a navy fill); a light shade
+   only where the heading and the cards sit. */
+.cxcs.cxcs--on-stage { background:transparent; }
+.cxcs.cxcs--on-stage .cxcs-backdrop { background:
+  radial-gradient(70% 46% at 50% 38%,rgba(7,20,59,.3),rgba(7,20,59,0) 75%),
+  linear-gradient(180deg,rgba(7,20,59,0),rgba(7,20,59,.14) 22%,rgba(7,20,59,.16) 68%,rgba(7,20,59,0)); }
+/* (Both ends at 0: no seam where WORKS above and 02 PRODUCTION FLOW below meet the same stage.) */
+.cxcs.cxcs--on-stage :is(.cxcs-head,.cxcs-note) { text-shadow:0 1px 16px rgba(7,20,59,.55); }
+
+.cxcs-inner { position:relative; width:min(100% - 40px,1420px); margin-inline:auto; }
+
+/* ---------- heading ---------- */
+.cxcs-head { display:grid; justify-items:center; gap:clamp(10px,1vw,16px); text-align:center; }
+.cxcs .cxcs-index { color:rgba(255,255,255,.92); font:600 clamp(.75rem,1.05vw,1.0625rem)/1.4 var(--cx-font-latin); letter-spacing:.32em; }
+.cxcs-index span { color:var(--cx-color-creative); font-weight:700; }
+.cxcs .cxcs-title { color:var(--cx-color-white); font-family:var(--cx-font-ja); font-size:var(--cx-type-section); font-weight:var(--cx-weight-heading); line-height:1.3; letter-spacing:.01em; }
+/* Lines break only between the phrases. */
+.cxcs-title span,.cxcs-lead span,.cxcs-note span,.cxcs-source__desc span { display:inline-block; }
+.cxcs-title em { color:var(--cx-color-creative); font-style:normal; }
+.cxcs .cxcs-lead { color:var(--cxcs-soft); font-size:var(--cx-type-lead); font-weight:var(--cx-weight-lead); line-height:1.7; letter-spacing:.04em; }
+
+/* ---------- 企業が伝えたいこと ---------- */
+.cxcs-flow { margin-top:clamp(22px,2.2vw,34px); }
+.cxcs-source { display:flex; align-items:center; justify-content:center; gap:clamp(18px,2vw,34px); width:min(100%,705px); margin-inline:auto; padding:clamp(16px,1.6vw,24px) clamp(20px,2.8vw,44px); border:1px solid var(--cxcs-edge); border-radius:16px; background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03)); box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 40px rgba(0,0,0,.24); }
+.cxcs-source__icon { flex:none; width:clamp(44px,4vw,64px); height:clamp(44px,4vw,64px); fill:none; stroke:var(--cx-color-white); stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.cxcs-source__text { display:grid; gap:4px; min-width:0; padding-left:clamp(18px,2vw,34px); border-left:1px solid rgba(255,255,255,.28); text-align:left; }
+.cxcs .cxcs-source__title { font-size:clamp(1.125rem,1.6vw,1.625rem); font-weight:var(--cx-weight-strong); line-height:1.4; letter-spacing:.06em; }
+.cxcs .cxcs-source__desc { color:var(--cxcs-soft); font-size:clamp(.8125rem,1vw,1rem); line-height:1.6; }
+
+/* ---------- the split line (decoration; the order of the cards carries the meaning) ---------- */
+.cxcs-branch { --cxcs-end:calc((100% - 2 * var(--cxcs-gap)) / 6); position:relative; height:clamp(48px,4vw,66px); color:var(--cxcs-line); }
+.cxcs-branch::before,.cxcs-branch::after,.cxcs-branch i { filter:drop-shadow(0 0 4px rgba(250,77,18,.75)); }
+.cxcs-branch::before { content:""; position:absolute; top:46%; bottom:7px; left:var(--cxcs-end); right:var(--cxcs-end); border:1.5px solid currentColor; border-bottom:0; border-radius:14px 14px 0 0; }
+.cxcs-branch::after { content:""; position:absolute; top:0; bottom:7px; left:calc(50% - .75px); width:1.5px; background:currentColor; }
+.cxcs-branch i { position:absolute; bottom:3px; width:9px; height:9px; margin-left:-4.5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:rotate(45deg); }
+.cxcs-branch i:nth-child(1) { left:var(--cxcs-end); }
+.cxcs-branch i:nth-child(2) { left:50%; }
+.cxcs-branch i:nth-child(3) { left:calc(100% - var(--cxcs-end)); }
+.cxcs-branch__map { display:none; }
+
+/* ---------- cards ---------- */
+.cxcs .cxcs-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--cxcs-gap); margin:0; padding:0; list-style:none; }
+.cxcs-card { --cxcs-accent:var(--cxcs-manga); position:relative; display:grid; grid-template-rows:auto auto 1fr; gap:clamp(12px,1vw,16px); padding:clamp(14px,1.2vw,18px) clamp(14px,1.2vw,18px) clamp(16px,1.3vw,20px); border:1px solid var(--cxcs-accent); border-color:color-mix(in srgb,var(--cxcs-accent) 55%,transparent); border-radius:18px; background:linear-gradient(180deg,rgba(17,30,64,.8),rgba(9,18,42,.88)); box-shadow:inset 0 -2px 0 var(--cxcs-accent),0 16px 36px -14px var(--cxcs-accent),0 22px 48px rgba(0,0,0,.3); transition:translate var(--cx-motion-ui) var(--cx-motion-ease),box-shadow var(--cx-motion-ui) ease; }
+.cxcs-card--anime { --cxcs-accent:var(--cxcs-anime); }
+.cxcs-card--video { --cxcs-accent:var(--cxcs-video); }
+.cxcs-card__head { position:relative; display:grid; gap:2px; padding-left:22px; }
+.cxcs-card__head::before { content:""; position:absolute; top:3px; bottom:3px; left:5px; width:4px; border-radius:2px; background:var(--cxcs-accent); transform:skewX(-18deg); }
+.cxcs .cxcs-card__label { color:rgba(255,255,255,.82); font:600 var(--cx-type-label)/1.3 var(--cx-font-latin); letter-spacing:.28em; }
+.cxcs .cxcs-card__name { color:var(--cx-color-white); font-size:clamp(1.25rem,1.65vw,1.75rem); font-weight:var(--cx-weight-heading); line-height:1.25; letter-spacing:.04em; }
+
+/* Picture: 16:9 for every card. Video thumbnails keep their shape; a manga cover is shown whole
+   (never cropped) on a blurred copy of itself. */
+.cxcs-card__media { position:relative; display:block; aspect-ratio:16 / 9; overflow:hidden; border-radius:12px; background:#101d40; }
+.cxcs-card__media img { display:block; width:100%; height:100%; object-fit:cover; transition:scale .9s var(--cx-motion-ease),opacity .3s ease; }
+.cxcs-card__fallback { opacity:.92; }
+.cxcs.is-loading .cxcs-card__fallback,.cxcs-card__media.has-picture .cxcs-card__fallback { opacity:0; }
+.cxcs-card__picture { position:absolute; inset:0; }
+.cxcs-card__picture img { position:absolute; inset:0; }
+.cxcs-card__media .cxcs-card__cover-fill { top:-24px; left:-24px; width:calc(100% + 48px); height:calc(100% + 48px); filter:blur(16px) brightness(.8) saturate(1.1); }
+.cxcs-card__media .cxcs-card__cover { object-fit:contain; filter:drop-shadow(0 8px 18px rgba(0,0,0,.45)); }
+.cxcs-card__play { position:absolute; top:50%; left:50%; width:clamp(48px,4.2vw,64px); aspect-ratio:1; margin:calc(clamp(48px,4.2vw,64px) / -2) 0 0 calc(clamp(48px,4.2vw,64px) / -2); border:2px solid var(--cx-color-white); border-radius:50%; background:rgba(7,20,59,.38); box-shadow:0 6px 24px rgba(0,0,0,.35); transition:scale var(--cx-motion-ui) var(--cx-motion-ease),background var(--cx-motion-ui) ease; }
+.cxcs-card__play::before { content:""; position:absolute; top:50%; left:50%; margin:-9px 0 0 -5px; border-style:solid; border-width:9px 0 9px 15px; border-color:transparent transparent transparent var(--cx-color-white); }
+
+.cxcs-card__body { display:grid; grid-template-rows:auto auto auto 1fr; align-content:start; gap:6px; padding-inline:2px; }
+.cxcs .cxcs-card__title { font-size:clamp(.9375rem,1.15vw,1.0625rem); font-weight:var(--cx-weight-strong); line-height:1.5; overflow-wrap:anywhere; }
+/* While WordPress answers, a bar keeps the title's place so the cards do not jump. */
+.cxcs.is-loading .cxcs-card__title[hidden] { display:block; width:72%; height:1.5em; border-radius:6px; background:rgba(255,255,255,.1); }
+.cxcs .cxcs-card__desc { color:var(--cxcs-soft); font-size:clamp(.8125rem,.95vw,.9375rem); line-height:1.7; }
+.cxcs .cxcs-card__status { color:#ffd9cc; font-size:var(--cx-type-small); font-weight:var(--cx-weight-strong); line-height:1.6; }
+/* One control per card; its ::after covers the whole card. */
+.cxcs-card__action { align-self:end; justify-self:start; display:inline-flex; align-items:center; gap:8px; min-height:44px; margin-top:6px; padding:0 18px; border:1px solid rgba(255,255,255,.55); border-radius:999px; background:rgba(255,255,255,.06); color:var(--cx-color-white); font:inherit; font-size:var(--cx-type-small); font-weight:var(--cx-weight-strong); letter-spacing:.04em; line-height:1.3; cursor:pointer; transition:background var(--cx-motion-fast) ease,color var(--cx-motion-fast) ease,border-color var(--cx-motion-fast) ease; }
+.cxcs-card__action svg { flex:none; width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:translate var(--cx-motion-ui) var(--cx-motion-ease); }
+.cxcs-card__action::after { content:""; position:absolute; inset:0; border-radius:18px; }
+.cxcs .cxcs-card__action:focus-visible { outline-offset:2px; }
+@supports selector(:has(*)) {
+  .cxcs .cxcs-card__action:focus-visible { outline:0; }
+  .cxcs-card:has(.cxcs-card__action:focus-visible) { outline:3px solid var(--cx-color-white); outline-offset:4px; }
+}
+
+/* ---------- arrow to 活用する場面 ---------- */
+.cxcs-down { position:relative; height:clamp(38px,3.2vw,50px); margin-top:clamp(8px,.8vw,12px); color:var(--cxcs-line); filter:drop-shadow(0 0 5px rgba(250,77,18,.7)); }
+.cxcs-down::before { content:""; position:absolute; top:0; bottom:7px; left:calc(50% - .75px); width:1.5px; background:currentColor; }
+.cxcs-down::after { content:""; position:absolute; bottom:3px; left:50%; width:9px; height:9px; margin-left:-4.5px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:rotate(45deg); }
+
+/* ---------- 活用する場面 ---------- */
+.cxcs-uses { margin-top:clamp(6px,.7vw,12px); }
+.cxcs .cxcs-uses__title { display:flex; align-items:center; justify-content:center; gap:clamp(16px,2vw,28px); width:min(100%,800px); margin:0 auto; color:var(--cx-color-white); font-size:clamp(1.25rem,1.75vw,1.75rem); font-weight:var(--cx-weight-strong); line-height:1.4; letter-spacing:.08em; }
+.cxcs-uses__title::before,.cxcs-uses__title::after { content:""; flex:1; height:1px; background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.45)); }
+.cxcs-uses__title::after { background:linear-gradient(270deg,rgba(255,255,255,0),rgba(255,255,255,.45)); }
+.cxcs .cxcs-uses__list { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:clamp(12px,1.2vw,18px) 0 0; padding:clamp(18px,1.6vw,26px) clamp(12px,2vw,40px); border:1px solid var(--cxcs-edge); border-radius:16px; background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.03)); list-style:none; }
+.cxcs-uses__list li { position:relative; display:flex; align-items:center; justify-content:center; gap:clamp(12px,1.2vw,20px); min-width:0; padding:4px clamp(10px,1.4vw,24px); }
+.cxcs-uses__list li + li::before { content:""; position:absolute; top:14%; bottom:14%; left:0; width:1px; background:rgba(255,255,255,.24); }
+.cxcs-uses__icon { display:grid; flex:none; place-items:center; width:clamp(52px,4.8vw,80px); height:clamp(46px,3.9vw,64px); border:1px solid rgba(255,255,255,.12); border-radius:12px; background:rgba(255,255,255,.07); }
+.cxcs-uses__icon svg { width:clamp(28px,2.6vw,40px); height:clamp(28px,2.6vw,40px); fill:none; stroke:var(--cx-color-white); stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+.cxcs-uses__text { display:grid; gap:4px; min-width:0; }
+.cxcs-uses__text strong { font-size:clamp(1rem,1.35vw,1.375rem); font-weight:var(--cx-weight-strong); line-height:1.35; }
+.cxcs-uses__text span { color:var(--cxcs-soft); font-size:clamp(.75rem,.95vw,.9375rem); line-height:1.5; }
+.cxcs .cxcs-note { margin-top:clamp(20px,2vw,30px); color:var(--cxcs-soft); font-size:clamp(.875rem,1.2vw,1.25rem); line-height:1.7; letter-spacing:.04em; text-align:center; }
+
+@media (hover:hover) and (pointer:fine) {
+  .cxcs-card:hover { translate:0 -4px; box-shadow:inset 0 -2px 0 var(--cxcs-accent),0 20px 44px -12px var(--cxcs-accent),0 28px 56px rgba(0,0,0,.34); }
+  .cxcs-card:hover .cxcs-card__media img { scale:1.035; }
+  .cxcs-card:hover .cxcs-card__action { border-color:var(--cx-color-white); background:var(--cx-color-white); color:var(--cx-color-ink); }
+  .cxcs-card:hover .cxcs-card__action svg { translate:3px 0; }
+  .cxcs-card:hover .cxcs-card__play { scale:1.08; background:rgba(255,255,255,.16); }
+}
+
+/* ---------- PC ---------- */
+@media (min-width:769px) { .cxcs-inner { width:min(100% - 80px,1420px); } }
+@media (min-width:1101px) { .cxcs-inner { width:min(100% - 96px,84.6vw,1420px); } }
+
+/* ---------- tablet: three cards stay; 活用する場面 in two rows ---------- */
+@media (min-width:769px) and (max-width:1100px) {
+  .cxcs .cxcs-uses__list { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:14px; }
+  .cxcs-uses__list li { justify-content:flex-start; }
+  .cxcs-uses__list li:nth-child(3)::before { display:none; }
+}
+
+/* ---------- phones / small tablets ---------- */
+@media (max-width:768px) {
+  .cxcs { --cxcs-gap:16px; padding:56px 0 64px; }
+  .cxcs .cxcs-title { font-size:clamp(1.625rem,6.6vw,2.25rem); }
+  .cxcs .cxcs-lead { font-size:clamp(.9375rem,4vw,1.0625rem); }
+  .cxcs-source { justify-content:flex-start; gap:14px; padding:16px 18px; }
+  .cxcs-source__icon { width:40px; height:40px; }
+  .cxcs-source__text { padding-left:14px; }
+  /* The split line ends at three small labels (the cards follow in the same order). */
+  .cxcs-branch { --cxcs-gap:8px; height:84px; }
+  .cxcs-branch::before { top:20px; bottom:41px; }
+  .cxcs-branch::after { bottom:41px; }
+  .cxcs-branch i { bottom:37px; }
+  .cxcs .cxcs-branch__map { position:absolute; right:0; bottom:0; left:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:0; padding:0; list-style:none; }
+  .cxcs-branch__map li { display:grid; place-items:center; min-height:32px; padding:0 4px; border:1px solid var(--cxcs-line); border-radius:999px; background:rgba(7,20,59,.72); color:var(--cx-color-white); font-size:var(--cx-type-small); font-weight:var(--cx-weight-strong); line-height:1.2; }
+  .cxcs-branch__map li:nth-child(2) { border-color:var(--cxcs-anime); }
+  .cxcs-branch__map li:nth-child(3) { border-color:var(--cxcs-video); }
+  .cxcs .cxcs-cards { grid-template-columns:minmax(0,1fr); margin-top:16px; }
+  .cxcs-card { padding:14px 14px 16px; border-radius:16px; }
+  .cxcs-card__action::after { border-radius:16px; }
+  .cxcs .cxcs-card__title { font-size:1rem; }
+  .cxcs .cxcs-card__desc { font-size:.875rem; }
+  .cxcs .cxcs-uses__title { font-size:1.25rem; }
+  .cxcs .cxcs-uses__list { grid-template-columns:repeat(2,minmax(0,1fr)); padding:6px; }
+  .cxcs-uses__list li { flex-direction:column; gap:8px; padding:16px 8px; text-align:center; }
+  .cxcs-uses__list li + li::before { display:none; }
+  .cxcs-uses__list li:nth-child(odd) { border-right:1px solid rgba(255,255,255,.16); }
+  .cxcs-uses__list li:nth-child(-n+2) { border-bottom:1px solid rgba(255,255,255,.16); }
+  .cxcs-uses__icon { width:52px; height:44px; }
+  .cxcs-uses__icon svg { width:28px; height:28px; }
+  .cxcs-uses__text strong { font-size:.9375rem; }
+  .cxcs-uses__text span { font-size:var(--cx-type-label); }
+  .cxcs .cxcs-note { font-size:.875rem; }
+}
+/* 600–768px: picture left, text right, so three cards do not take three screens. */
+@media (min-width:600px) and (max-width:768px) {
+  .cxcs-card { grid-template-columns:minmax(0,46%) minmax(0,1fr); grid-template-rows:auto 1fr; column-gap:18px; row-gap:10px; }
+  .cxcs-card__media { grid-row:1 / 3; align-self:center; }
+  .cxcs-card__head { grid-column:2; }
+  .cxcs-card__body { grid-column:2; }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .cxcs-card,.cxcs-card__media img,.cxcs-card__play,.cxcs-card__action,.cxcs-card__action svg,.cxcs-backdrop__img { transition:none; }
+  .cxcs-card:hover,.cxcs-card:hover .cxcs-card__media img,.cxcs-card:hover .cxcs-card__play,.cxcs-card:hover .cxcs-card__action svg { translate:none; scale:none; }
+}

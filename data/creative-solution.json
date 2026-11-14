@@ -1,0 +1,8 @@
+{
+  "about": "Creative X 紹介ページ「03 CREATIVE SOLUTION」に出す代表作品（1サービス1作品）。表示する題名・画像・ページ・動画は WordPress から読む。ここに書くのは作品の識別子だけ。manga は /works?site=contentsx の id、anime・video は /bizanime-videos の YouTube 動画ID（viewer・cases の video_id）かプレイリストID（playlists の playlist_id）。memo は人が読むための控えで、画面には出さない。変えたら python3 tools/build-services.py を実行する。",
+  "works": [
+    { "kind": "manga", "id": "opro-kamiless", "memo": "マンガでわかるカミレス【公共・自治体編】" },
+    { "kind": "anime", "id": "V9ZC16hTlZI", "memo": "Good Bye MV（viewer・bizanime）" },
+    { "kind": "video", "id": "QqRlb_JGaHw", "memo": "VLOG（viewer・bizvideo）" }
+  ]
+}

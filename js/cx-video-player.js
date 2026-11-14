@@ -7,7 +7,9 @@
    items: [{ title, description, provider: youtube|youtube_playlist|drive|mp4, video_id, src, poster }]
    Embed URLs are rebuilt from validated IDs; nothing from the data is written as HTML.
    CxVideoPlayer.playable(items) returns the items that can be played (the caller decides what to
-   show when there are none). */
+   show when there are none).
+   The returned player has stop(), destroy() and play(i): play(i) starts video i at once, for a caller
+   whose own button the visitor just pressed (the Creative X page's WORKS opens its viewer that way). */
 (function () {
   'use strict';
   if (!window.cxDom) return; // js/cx-dom.js が先に読まれていない
@@ -53,7 +55,7 @@
     var playing = -1;
     root.textContent = '';
     root.classList.add('cxvp');
-    if (!n) return { stop: function () {}, destroy: function () { root.textContent = ''; } };
+    if (!n) return { stop: function () {}, play: function () {}, destroy: function () { root.textContent = ''; } };
 
     var track = el('div', 'cxvp-track');
     track.setAttribute('role', 'group');
@@ -192,6 +194,7 @@
 
     return {
       stop: stop,
+      play: function (i) { if (i >= 0 && i < n) { go(i); start(i); } },
       destroy: function () { window.removeEventListener('resize', onResize); if (frame) cancelAnimationFrame(frame); root.textContent = ''; }
     };
   };

@@ -1,0 +1,124 @@
+/* Creative X landing — 02 PRODUCTION FLOW (2026-11 approved design「ご相談から、完成まで。」).
+   PC (1101px+): heading left (label, large title, lead, short orange line), four-step timeline right.
+   769–1100px: heading above, the same cards full width. Up to 600px: each card stacks (number and icon,
+   title, text, the customer's part, picture at the bottom).
+   Timeline: a rail at the left of the cards; a node on it at each card, joined by segments (each segment
+   runs from its node down to the next one, so the line is continuous whatever the card heights).
+   Cards: dark glass (translucent, thin light border, a soft sheen), the step picture on the right fading
+   into the glass. No background of its own: the section sits on the stage (.cxg-stage) and the blurred HERO
+   picture shows through (css/service-creative-hero.css; a little calmer here, [data-cxg-calm]).
+   Motion (js/sitewide-motion.js, once): the heading rises in; then the cards come in from STEP 01 down, each
+   segment grows to the next node and each node lights up. Reduced motion or no JS: all shown at once.
+   `.cxg p { margin:0 }` outranks one class, hence `.cxpf .cxpf-…` where a <p> needs margins or sizes. */
+
+.cxpf {
+  --cxpf-accent: color-mix(in srgb, var(--cx-color-creative) 72%, #fff);   /* the creative orange, lifted for dark glass */
+  --cxpf-rail: 44px;           /* room for the rail at the left of the cards */
+  --cxpf-gap: clamp(16px, 1.6vw, 24px);
+  --cxpf-node: 16px;
+  --cxpf-node-y: 44%;          /* PC: cards share one height, the node sits by the number */
+  --cxpf-img: 48%;             /* width of the picture at the right of a card */
+  /* Type sizes stop growing at about 1440px wide, where the content width (.cxs-container) stops too. */
+  position: relative; z-index: 1;
+  padding-block: clamp(64px, 6vw, 110px);
+  background: transparent; color: var(--cx-color-white);
+}
+.cxpf-inner { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr); align-items: center; gap: clamp(32px, 4vw, 72px); }
+
+/* ---------- heading ---------- */
+/* Japanese phrases stay whole: the step texts carry <wbr> at phrase ends (the site's automatic phrase breaking,
+   `p { word-break:auto-phrase }` in style.css, split 「活用方法」 here). A very long word may still break. */
+.cxpf :is(.cxpf-index, .cxpf-title, .cxpf-lead, .cxpf-card__title, .cxpf-card__desc, .cxpf-card__you) { word-break: keep-all; line-break: strict; overflow-wrap: anywhere; }
+/* The heading column is a size container: 「ご相談から、」 (one line) never grows past it toward the timeline. */
+.cxpf-head { container-type: inline-size; text-shadow: 0 2px 18px rgba(0, 0, 0, .35); }
+.cxpf .cxpf-index { display: flex; align-items: baseline; gap: .45em; margin: 0; color: rgba(255, 255, 255, .92); font: 600 clamp(.95rem, 1.2vw, 1.08rem)/1.3 var(--cx-font-latin); letter-spacing: .08em; }
+.cxpf-index span { color: var(--cxpf-accent); font-size: 1.6em; font-weight: 700; letter-spacing: 0; }
+.cxpf .cxpf-title { margin: clamp(18px, 2vw, 28px) 0 0; color: var(--cx-color-white); font-family: var(--cx-font-ja); font-size: min(clamp(2.25rem, 4.2vw, 4.25rem), 15.6cqi); font-weight: var(--cx-weight-heading); line-height: 1.24; letter-spacing: .02em; }
+.cxpf-title span, .cxpf-lead span { display: inline-block; }
+.cxpf-title span { white-space: nowrap; }   /* 「ご相談から、」「完成まで。」 never split */
+.cxpf .cxpf-lead { margin: clamp(18px, 2vw, 28px) 0 0; color: rgba(255, 255, 255, .9); font-size: clamp(.9375rem, 1.1vw, 1rem); line-height: 1.9; }
+.cxpf-head::after { content: ""; display: block; width: 80px; height: 3px; margin-top: clamp(24px, 3vw, 40px); border-radius: 2px; background: var(--cx-color-creative); }
+
+/* ---------- timeline ---------- */
+.cxpf-timeline { display: grid; grid-auto-rows: 1fr; gap: var(--cxpf-gap); margin: 0; padding: 0 0 0 var(--cxpf-rail); list-style: none; }
+.cxpf-step { position: relative; display: flex; min-width: 0; }
+/* The node, on the rail, level with the number. */
+.cxpf-step::before { content: ""; position: absolute; z-index: 1; top: var(--cxpf-node-y); left: calc(var(--cxpf-rail) * -1 + 10px); width: var(--cxpf-node); height: var(--cxpf-node); margin-top: calc(var(--cxpf-node) / -2); border-radius: 50%; background: var(--cx-color-white);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cx-color-creative) 55%, transparent), 0 0 16px 3px color-mix(in srgb, var(--cxpf-accent) 70%, transparent); }
+/* The segment from this node to the next one (same offset in the next card, one card height + gap below). */
+.cxpf-step:not(:last-child)::after { content: ""; position: absolute; top: var(--cxpf-node-y); left: calc(var(--cxpf-rail) * -1 + 10px + var(--cxpf-node) / 2 - 1px); width: 2px; height: calc(100% + var(--cxpf-gap)); background: linear-gradient(180deg, var(--cxpf-accent), color-mix(in srgb, var(--cxpf-accent) 55%, transparent)); transform-origin: top; }
+
+/* ---------- card ---------- */
+.cxpf-card { position: relative; isolation: isolate; display: grid; grid-template-columns: clamp(72px, 7vw, 104px) minmax(0, 1fr); align-items: center; width: 100%; min-height: clamp(146px, 12vw, 176px);
+  padding: clamp(16px, 1.4vw, 20px) clamp(20px, 2vw, 30px); overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .34); border-radius: clamp(18px, 1.6vw, 24px);
+  background: linear-gradient(100deg, rgba(14, 18, 32, .5) 0%, rgba(14, 18, 32, .36) 46%, rgba(14, 18, 32, .2) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .3), 0 18px 44px rgba(0, 0, 0, .22), 0 0 24px color-mix(in srgb, var(--cxpf-accent) 14%, transparent); }
+/* Sheen over the glass and the picture, under the text. */
+.cxpf-card::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, 0) 42%), linear-gradient(90deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, 0) 30%); }
+.cxpf-card__img { position: absolute; top: 0; right: 0; z-index: 0; width: var(--cxpf-img); height: 100%; object-fit: cover; object-position: center 40%; opacity: .92;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .5) 24%, #000 50%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, .5) 24%, #000 50%); }
+.cxpf-card__mark { position: relative; z-index: 2; display: grid; justify-items: start; gap: 10px; }
+.cxpf-card__num { color: var(--cx-color-white); font: 600 clamp(2rem, 3vw, 2.7rem)/1 var(--cx-font-latin); letter-spacing: .02em; }
+.cxpf-card__icon { width: clamp(32px, 2.9vw, 42px); height: clamp(32px, 2.9vw, 42px); fill: none; stroke: var(--cxpf-accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.cxpf-card__body { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; align-self: stretch; justify-content: center; min-width: 0;
+  padding: 2px calc(var(--cxpf-img) - 12%) 2px clamp(18px, 2vw, 30px); border-left: 1px solid rgba(255, 255, 255, .26); text-shadow: 0 1px 10px rgba(0, 0, 0, .4); }
+.cxpf .cxpf-card__title { margin: 0; color: var(--cx-color-white); font-size: clamp(1.15rem, 1.7vw, 1.55rem); font-weight: var(--cx-weight-heading); line-height: 1.35; letter-spacing: .04em; }
+.cxpf .cxpf-card__desc { margin: 6px 0 0; text-wrap: pretty; color: rgba(255, 255, 255, .88); font-size: clamp(.875rem, 1vw, .9rem); line-height: 1.7; }
+.cxpf .cxpf-card__you { display: inline-flex; align-items: center; gap: 8px; margin: clamp(10px, 1.1vw, 14px) 0 0; padding: 6px 16px 6px 12px; border: 1px solid rgba(255, 255, 255, .42); border-radius: 999px; background: rgba(14, 18, 32, .34); color: var(--cx-color-white); font-size: .8125rem; font-weight: 600; line-height: 1.45; white-space: nowrap; }
+/* One line on PC and tablets: the pill has its own glass, so it may run over the faded edge of the picture. */
+.cxpf-card__you-icon { flex: none; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.cxpf-card__you-label { font-weight: 700; }
+
+/* ---------- one time entrance (js/sitewide-motion.js adds .cx-motion-pending, then .cx-motion-visible) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* The list itself does not move; its cards, segments and nodes do, in order. */
+  body.cxs-services .cxpf-timeline.cx-motion-pending:not(.cx-motion-visible) { opacity: 1; transform: none; }
+  body.cxs-services .cxpf-timeline.cx-motion-pending .cxpf-card { transition: opacity .55s ease-out, transform .7s var(--cx-motion-ease); transition-delay: var(--cxpf-at, 0s); }
+  body.cxs-services .cxpf-timeline.cx-motion-pending .cxpf-step::before { transition: background .3s ease, box-shadow .45s ease, scale .45s var(--cx-motion-ease); transition-delay: calc(var(--cxpf-at, 0s) + .12s); }
+  body.cxs-services .cxpf-timeline.cx-motion-pending .cxpf-step::after { transition: transform .4s ease-out; transition-delay: calc(var(--cxpf-at, 0s) + .18s); }
+  body.cxs-services .cxpf-timeline.cx-motion-pending:not(.cx-motion-visible) .cxpf-card { opacity: 0; transform: translate3d(24px, 0, 0); }
+  body.cxs-services .cxpf-timeline.cx-motion-pending:not(.cx-motion-visible) .cxpf-step::before { background: rgba(255, 255, 255, .28); box-shadow: none; scale: .7; }
+  body.cxs-services .cxpf-timeline.cx-motion-pending:not(.cx-motion-visible) .cxpf-step::after { transform: scaleY(0); }
+  .cxpf-step:nth-child(2) { --cxpf-at: .16s; }
+  .cxpf-step:nth-child(3) { --cxpf-at: .32s; }
+  .cxpf-step:nth-child(4) { --cxpf-at: .48s; }
+}
+
+/* ---------- 1101–1280px: a narrower picture leaves the text its room ---------- */
+@media (max-width: 1280px) { .cxpf { --cxpf-img: 42%; } }
+
+/* ---------- 769–1100px (and phones down to 601px): heading above, cards full width ---------- */
+@media (max-width: 1100px) {
+  .cxpf-inner { grid-template-columns: minmax(0, 1fr); gap: clamp(36px, 5vw, 56px); }
+  .cxpf-head { max-width: 640px; }
+  .cxpf { --cxpf-img: 44%; }
+}
+@media (max-width: 768px) {
+  .cxpf { --cxpf-rail: 30px; --cxpf-node: 14px; padding-block: clamp(64px, 14vw, 96px); }
+  .cxpf-step::before { left: calc(var(--cxpf-rail) * -1 + 4px); }
+  .cxpf-step:not(:last-child)::after { left: calc(var(--cxpf-rail) * -1 + 4px + var(--cxpf-node) / 2 - 1px); }
+  .cxpf-card__body { padding-right: calc(var(--cxpf-img) - 6%); }
+}
+
+/* ---------- phones (up to 600px): each card stacks, the picture at its foot ---------- */
+@media (max-width: 600px) {
+  /* Cards differ in height here: the node sits at a fixed offset (level with the number). */
+  .cxpf { --cxpf-node-y: 34px; --cxpf-gap: 18px; }
+  .cxpf-timeline { grid-auto-rows: auto; }
+  .cxpf-card { grid-template-columns: minmax(0, 1fr); align-items: start; min-height: 0; padding: 18px 18px 0; }
+  .cxpf-card__mark { display: flex; align-items: center; gap: 12px; }
+  .cxpf-card__num { font-size: 2rem; }
+  .cxpf-card__icon { width: 30px; height: 30px; }
+  .cxpf-card__body { margin-top: 12px; padding: 12px 0 0; border-left: 0; border-top: 1px solid rgba(255, 255, 255, .22); }
+  .cxpf .cxpf-card__title { font-size: 1.1875rem; }
+  .cxpf .cxpf-card__desc { font-size: .9375rem; }
+  /* The customer's part: label on its own line, the text below it in balanced lines. */
+  .cxpf .cxpf-card__you { align-items: flex-start; padding: 8px 14px 8px 10px; border-radius: 14px; font-size: .8125rem; white-space: normal; }
+  .cxpf .cxpf-card__you .cxpf-card__you-icon { margin-top: 2px; }
+  .cxpf-card__you-label { display: block; }
+  .cxpf-card__you-label + span { display: block; text-wrap: balance; }
+  .cxpf-card__img { position: relative; z-index: 0; display: block; width: calc(100% + 36px); max-width: none; height: auto; aspect-ratio: 16 / 9; margin: 14px -18px 0; opacity: .95;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .6) 22%, #000 48%); mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .6) 22%, #000 48%); }
+}

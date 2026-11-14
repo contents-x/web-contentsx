@@ -1,0 +1,122 @@
+/* Creative X landing — 03 FAQ / CONTACT (2026-11 approved design「よくあるご質問」).
+   PC (1101px+): heading left (label, title, lead, short orange line), five questions right; a thin rule; then the
+   wide CONTACT panel (copy left, the orange CTA right). Up to 1100px: heading, questions, CONTACT in one column.
+   Questions and answers are dark glass rows like 02 PRODUCTION FLOW; js/cx-accordion.js opens and closes them
+   (css/cx-accordion.css for the motion). No background of its own: the section is the last one on the stage
+   (.cxg-stage), the blurred HERO picture shows through, held still here ([data-cxg-still], the background video
+   pauses while this section fills the screen) and as calm as behind PRODUCTION FLOW; the stage then fades into
+   the footer's navy. `.cxg p { margin:0 }` outranks one class, hence `.cxfq .cxfq-…` for <p> sizes. */
+
+.cxfq {
+  --cxfq-accent: color-mix(in srgb, var(--cx-color-creative) 72%, #fff);   /* the creative orange, lifted for dark glass */
+  --cxfq-glass: linear-gradient(100deg, rgba(14, 18, 32, .56) 0%, rgba(14, 18, 32, .44) 60%, rgba(14, 18, 32, .36) 100%);
+  --cxfq-edge: rgba(255, 255, 255, .3);
+  /* Sizes stop growing at about 1440px wide, where the content width (.cxs-container) stops too. */
+  --cxfq-num: clamp(72px, 7vw, 100px);   /* the Q01 column, with its rule */
+  --cxfq-pad: clamp(16px, 2.4vw, 34px);  /* between that rule and the text */
+  position: relative; z-index: 1;
+  padding-block: clamp(72px, 7vw, 120px) clamp(48px, 5vw, 88px);
+  background: transparent; color: var(--cx-color-white);
+}
+.cxfq :focus-visible { outline: 3px solid var(--cx-color-white); outline-offset: 3px; }
+/* Japanese phrases stay whole: the texts carry <wbr> at phrase ends (the site's `p { word-break:auto-phrase }` split
+   「表現方法」 and 「構いません」 here). */
+.cxfq :is(.cxfq-title, .cxfq-lead, .cxfq-q__text, .cxfq-a__inner p, .cxfq-contact__title, .cxfq-contact__text) { word-break: keep-all; line-break: strict; overflow-wrap: anywhere; }
+.cxfq-top { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.6fr); align-items: start; gap: clamp(40px, 5vw, 88px); }
+
+/* ---------- heading ---------- */
+/* The heading column is a size container: the one-line title never grows past it into the questions. */
+.cxfq-head { container-type: inline-size; padding-top: clamp(4px, 1.4vw, 24px); text-shadow: 0 2px 18px rgba(0, 0, 0, .35); }
+.cxfq .cxfq-index { display: flex; align-items: baseline; gap: .45em; margin: 0; color: rgba(255, 255, 255, .92); font: 600 clamp(.95rem, 1.2vw, 1.25rem)/1.3 var(--cx-font-latin); letter-spacing: .08em; }
+.cxfq-index span { color: var(--cxfq-accent); font-size: 1.6em; font-weight: 700; letter-spacing: 0; }
+.cxfq .cxfq-title { margin: clamp(14px, 1.6vw, 24px) 0 0; color: var(--cx-color-white); font-family: var(--cx-font-ja); font-size: min(clamp(2.1rem, 3.9vw, 4rem), 13.6cqi); font-weight: var(--cx-weight-heading); line-height: 1.24; letter-spacing: .02em; white-space: nowrap; }
+.cxfq-lead span, .cxfq-contact__title span { display: inline-block; }
+.cxfq .cxfq-lead { margin: clamp(16px, 1.8vw, 26px) 0 0; color: rgba(255, 255, 255, .9); font-size: clamp(.9375rem, 1.15vw, 1.125rem); line-height: 1.85; }
+.cxfq-head::after { content: ""; display: block; width: 80px; height: 3px; margin-top: clamp(22px, 2.6vw, 36px); border-radius: 2px; background: linear-gradient(90deg, var(--cx-color-creative), color-mix(in srgb, var(--cx-color-creative) 30%, transparent)); }
+
+/* ---------- questions ---------- */
+.cxfq-list { display: grid; gap: clamp(10px, 1vw, 16px); }
+.cxfq-item { overflow: hidden; border: 1px solid var(--cxfq-edge); border-radius: clamp(14px, 1.2vw, 18px); background: var(--cxfq-glass);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22), 0 14px 34px rgba(0, 0, 0, .18); transition: border-color var(--cx-motion-fast) ease, background var(--cx-motion-fast) ease; }
+.cxfq-item.is-open { border-color: rgba(255, 255, 255, .44); }
+.cxfq-q { margin: 0; font-size: inherit; }
+.cxfq-q__button { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; width: 100%; min-height: clamp(60px, 4.8vw, 70px); padding: 12px clamp(18px, 2.4vw, 34px); border: 0; background: transparent; color: var(--cx-color-white); font: inherit; text-align: left; cursor: pointer; }
+.cxfq-q__num { box-sizing: border-box; width: var(--cxfq-num); border-right: 1px solid rgba(255, 255, 255, .26); color: var(--cx-color-white); font: 600 clamp(1.05rem, 1.5vw, 1.35rem)/1.2 var(--cx-font-latin); letter-spacing: .02em; }
+.cxfq-q__num span { color: var(--cxfq-accent); }
+.cxfq-q__text { padding: 4px var(--cxfq-pad); font-size: clamp(1rem, 1.3vw, 1.1875rem); font-weight: var(--cx-weight-strong); line-height: 1.5; letter-spacing: .03em; text-shadow: 0 1px 10px rgba(0, 0, 0, .3); }
+/* + when closed, − when open (the vertical bar folds away). */
+.cxfq-q__icon { position: relative; width: 22px; height: 22px; flex: none; }
+.cxfq-q__icon::before, .cxfq-q__icon::after { content: ""; position: absolute; top: 50%; left: 50%; width: 20px; height: 2px; margin: -1px 0 0 -10px; border-radius: 2px; background: currentColor; transition: transform var(--cx-motion-ui) var(--cx-motion-ease); }
+.cxfq-q__icon::after { transform: rotate(90deg); }
+.cxfq-item.is-open .cxfq-q__icon::after { transform: rotate(90deg) scaleX(0); }
+@media (hover: hover) {
+  .cxfq-item:hover { border-color: rgba(255, 255, 255, .48); background: linear-gradient(100deg, rgba(14, 18, 32, .5), rgba(14, 18, 32, .38) 60%, rgba(14, 18, 32, .3)); }
+}
+/* The answer lines up with the question text. */
+.cxfq-a__inner { padding: 0 clamp(18px, 2.4vw, 34px); }
+.cxfq .cxfq-a__inner p { margin: 0; padding: 2px clamp(0px, 1vw, 12px) clamp(18px, 1.8vw, 26px) calc(var(--cxfq-num) + var(--cxfq-pad));
+  color: rgba(255, 255, 255, .9); font-size: clamp(.9375rem, 1vw, 1.0625rem); line-height: 1.9; text-shadow: 0 1px 8px rgba(0, 0, 0, .3); }
+.cxfq .cxfq-more { margin: clamp(4px, .6vw, 8px) 0 0; text-align: right; }
+.cxfq-more a { display: inline-flex; align-items: center; min-height: 44px; color: rgba(255, 255, 255, .9); font-size: var(--cx-type-small); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.cxfq-more a::after { content: "→"; margin-left: 8px; text-decoration: none; }
+@media (hover: hover) { .cxfq-more a:hover { color: var(--cx-color-white); } }
+
+/* ---------- CONTACT ---------- */
+.cxfq-contact { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: clamp(24px, 3vw, 56px);
+  margin-top: clamp(40px, 4.4vw, 72px); padding: clamp(32px, 3.6vw, 60px) clamp(28px, 4vw, 66px);
+  border: 1px solid rgba(255, 255, 255, .36); border-radius: clamp(18px, 1.6vw, 24px);
+  background: linear-gradient(110deg, rgba(14, 18, 32, .5), rgba(14, 18, 32, .34) 55%, rgba(14, 18, 32, .26));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .26), 0 22px 54px rgba(0, 0, 0, .22), 0 0 34px color-mix(in srgb, var(--cxfq-accent) 12%, transparent); }
+/* The thin rule between the questions and the panel. */
+.cxfq-contact { position: relative; }
+.cxfq-contact::before { content: ""; position: absolute; top: calc(clamp(40px, 4.4vw, 72px) / -2); left: 0; right: 0; height: 1px; background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .26) 12%, rgba(255, 255, 255, .26) 88%, rgba(255, 255, 255, 0)); }
+.cxfq-contact__copy { min-width: 0; text-shadow: 0 1px 12px rgba(0, 0, 0, .3); }
+.cxfq .cxfq-contact__label { margin: 0; color: rgba(255, 255, 255, .88); font: 600 var(--cx-type-small)/1.4 var(--cx-font-latin); letter-spacing: .28em; }
+.cxfq .cxfq-contact__title { margin: clamp(10px, 1vw, 14px) 0 0; color: var(--cx-color-white); font-size: clamp(1.4rem, 2.15vw, 1.95rem); font-weight: var(--cx-weight-heading); line-height: 1.35; letter-spacing: .02em; }
+.cxfq .cxfq-contact__text { margin: clamp(12px, 1.2vw, 18px) 0 0; color: rgba(255, 255, 255, .9); font-size: clamp(.9375rem, 1.05vw, 1.0625rem); line-height: 1.85; }
+.cxfq-contact__text span { display: block; }
+.cxfq-contact__actions { display: grid; justify-items: center; gap: 6px; }
+/* The site's orange button (.cxg-button), with the mail icon and an outward arrow. */
+.cxfq .cxfq-cta { gap: 16px; min-height: 64px; margin: 0; padding: 14px 34px 14px 30px; border: 0; background: linear-gradient(100deg, color-mix(in srgb, var(--cx-color-creative) 78%, #ffb15c), var(--cx-color-creative));
+  box-shadow: 0 12px 30px color-mix(in srgb, var(--cx-color-creative) 34%, transparent), inset 0 1px 0 rgba(255, 255, 255, .28); font-size: clamp(1rem, 1.15vw, 1.125rem); letter-spacing: .04em; white-space: nowrap; }
+.cxfq-cta svg { flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cxfq-cta__mail { width: 28px; height: 28px; }
+.cxfq-cta__arrow { width: 20px; height: 20px; margin-left: 10px; transition: transform var(--cx-motion-ui) var(--cx-motion-ease); }
+@media (hover: hover) { .cxfq-cta:hover .cxfq-cta__arrow { transform: translate(2px, -2px); } }
+.cxfq-dl { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: rgba(255, 255, 255, .86); font-size: var(--cx-type-small); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+@media (hover: hover) { .cxfq-dl:hover { color: var(--cx-color-white); } }
+
+/* ---------- up to 1100px: one column ---------- */
+@media (max-width: 1100px) {
+  .cxfq-top { grid-template-columns: minmax(0, 1fr); gap: clamp(28px, 4vw, 44px); }
+  .cxfq-head { max-width: 640px; padding-top: 0; }
+  .cxfq-contact { grid-template-columns: minmax(0, 1fr); justify-items: start; }
+  .cxfq-contact__actions { justify-items: start; }
+}
+/* ---------- phones ---------- */
+@media (max-width: 768px) {
+  .cxfq { padding-block: clamp(56px, 13vw, 88px) clamp(40px, 10vw, 64px); }
+  .cxfq .cxfq-title { white-space: normal; }
+  .cxfq-q__button { grid-template-columns: auto minmax(0, 1fr) auto; min-height: 64px; padding: 14px 16px; }
+  .cxfq { --cxfq-num: 50px; --cxfq-pad: 12px; }
+  .cxfq-q__num { font-size: 1rem; }
+  .cxfq-q__text { padding: 2px var(--cxfq-pad); font-size: 1rem; line-height: 1.55; }
+  .cxfq-q__icon { width: 20px; height: 20px; }
+  .cxfq-q__icon::before, .cxfq-q__icon::after { width: 16px; margin-left: -8px; }
+  .cxfq-a__inner { padding: 0 16px; }
+  .cxfq .cxfq-a__inner p { padding: 0 2px 18px; font-size: .9375rem; line-height: 1.9; }
+  .cxfq-contact { padding: 28px 20px; }
+  .cxfq-contact__text span { display: inline; }
+  .cxfq-contact__actions { justify-items: stretch; width: 100%; }
+  .cxfq .cxfq-cta { width: 100%; padding-inline: 20px; white-space: normal; }
+  .cxfq-dl { justify-self: center; }
+}
+/* Narrow phones: 「制作について相談する」 stays on one line. */
+@media (max-width: 360px) {
+  .cxfq .cxfq-cta { gap: 8px; padding-inline: 14px; font-size: .9375rem; }
+  .cxfq-cta__mail { width: 22px; height: 22px; }
+  .cxfq-cta__arrow { width: 16px; height: 16px; margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cxfq-item, .cxfq-q__icon::before, .cxfq-q__icon::after, .cxfq-cta__arrow { transition: none; }
+}

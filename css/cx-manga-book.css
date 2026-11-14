@@ -1,0 +1,56 @@
+/* Book mode of js/cx-manga-reader.js (opts.book; the Creative X work viewer, js/cx-works.js, 2026-11).
+   BizManga biz-library's open book and page flip, renamed into the reader's cxmr- namespace. Values are
+   BizManga's (web-bizmanga css/works.css):
+     .book / .book-page / .book-spine / .paper-texture  → .cxmr-book / .cxmr-leaf / .cxmr-spine / leaf ::before|::after
+     .flip-overlay / .flip-face / .page-shadow          → .cxmr-flip / .cxmr-flip__face / .cxmr-shade
+     .mobile-flip-overlay / -front / -back / -shadow    → .cxmr-pflip / .cxmr-pflip__face / .cxmr-pshade
+   The reader sets the page size (two pages as large as the stage allows) and runs the turn. */
+
+.cxmr-stage.is-book { overflow:visible; background:transparent; }
+
+/* ---------- open book (spreads) ---------- */
+.cxmr-book { position:relative; z-index:10; display:flex; flex-direction:row-reverse; border-radius:4px; perspective:2500px;
+  box-shadow:3px 1px 0 0 #e8e0d4,5px 2px 0 0 #e0d8cc,7px 3px 0 0 #d8d0c4,9px 4px 0 0 #d0c8bc,10px 5px 0 0 #c8c0b4,
+    -3px 1px 0 0 #e8e0d4,-5px 2px 0 0 #e0d8cc,-7px 3px 0 0 #d8d0c4,-9px 4px 0 0 #d0c8bc,-10px 5px 0 0 #c8c0b4,
+    1px 3px 0 0 #e8e0d4,2px 5px 0 0 #e0d8cc,3px 7px 0 0 #d8d0c4,4px 9px 0 0 #d0c8bc,5px 10px 0 0 #c8c0b4,
+    12px 14px 20px rgba(0,0,0,.4),0 0 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.05); }
+.cxmr-leaf { position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8f4ef; }
+.cxmr-stage.is-book .cxmr-leaf .cxmr-page { position:relative; z-index:1; width:100%; height:100%; max-width:none; object-fit:contain; background:transparent; }
+.cxmr-leaf--right { border-radius:0 4px 4px 0; }
+.cxmr-leaf--left { border-radius:4px 0 0 4px; }
+/* The fold: each page darkens toward the spine. */
+.cxmr-leaf--right::after,.cxmr-leaf--left::before { content:""; position:absolute; top:0; bottom:0; z-index:5; width:30px; pointer-events:none; }
+.cxmr-leaf--right::after { left:0; background:linear-gradient(270deg,transparent,rgba(0,0,0,.08)); }
+.cxmr-leaf--left::before { right:0; background:linear-gradient(90deg,transparent,rgba(0,0,0,.08)); }
+/* Paper texture (BizManga .paper-texture). */
+.cxmr-leaf--right::before,.cxmr-leaf--left::after { content:""; position:absolute; inset:0; z-index:4; pointer-events:none; opacity:.03; background-image:url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); background-size:150px; }
+.cxmr-spine { position:absolute; top:0; bottom:0; left:50%; z-index:20; width:20px; transform:translateX(-50%); pointer-events:none;
+  background:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.3) 35%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.3) 65%,transparent 100%); }
+@media (hover:hover) { .cxmr-stage.is-book .cxmr-leaf { transition:filter .2s; } .cxmr-stage.is-book .cxmr-leaf:hover { filter:brightness(1.02); } }
+
+/* The leaf that turns: next = the left half hinged on the spine (its right edge), previous = the right half. */
+.cxmr-flip { position:absolute; top:0; z-index:25; display:none; width:50%; height:100%; pointer-events:none; transform-style:preserve-3d; will-change:transform; }
+.cxmr-flip.is-active { display:block; }
+.cxmr-flip.is-left { right:auto; left:0; transform-origin:right center; }
+.cxmr-flip.is-right { right:0; left:auto; transform-origin:left center; }
+.cxmr-flip__face { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#f8f4ef; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+.cxmr-flip__face img { display:block; max-width:100%; max-height:100%; object-fit:contain; }
+.cxmr-flip__front { z-index:2; }
+.cxmr-flip__back { z-index:1; transform:rotateY(180deg); }
+.cxmr-shade { position:absolute; top:0; z-index:22; width:80px; height:100%; pointer-events:none; opacity:0; transition:opacity .15s; }
+.cxmr-shade.is-active { opacity:1; }
+.cxmr-shade--left { right:0; background:linear-gradient(to left,rgba(0,0,0,.25),transparent); }
+.cxmr-shade--right { left:0; background:linear-gradient(to right,rgba(0,0,0,.25),transparent); }
+
+/* ---------- one page at a time (phones) ---------- */
+.cxmr-pbook { position:relative; display:inline-block; max-width:100%; perspective:2500px; }
+/* The reader sizes the page to the stage (whatever the image's own size). */
+.cxmr-stage.is-book .cxmr-pbook__page { max-width:100%; max-height:none; object-fit:contain; background:#f8f4ef; box-shadow:0 4px 24px rgba(0,0,0,.5); }
+.cxmr-pflip { position:absolute; inset:0; z-index:10; display:none; pointer-events:none; transform-origin:left center; transform-style:preserve-3d; will-change:transform; }
+.cxmr-pflip.is-active { display:block; }
+.cxmr-pflip__face { position:absolute; inset:0; overflow:hidden; -webkit-backface-visibility:hidden; backface-visibility:hidden; }
+.cxmr-pflip__face img { width:100%; height:100%; object-fit:contain; }
+.cxmr-pflip__front { z-index:2; }
+.cxmr-pflip__back { z-index:1; transform:rotateY(180deg); }
+.cxmr-pshade { position:absolute; inset:0; z-index:15; pointer-events:none; opacity:0; transition:opacity .1s; }
+.cxmr-pshade.is-active { opacity:1; }
