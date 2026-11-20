@@ -94,7 +94,13 @@ def open_page(browser, width, height=None, js=True, reduced=False, init=None, **
     page.route('**/*', route_for(**route))
     page.goto(PAGE_URL, wait_until='load')
     if js and 'hang' not in route:
-        page.wait_for_function("document.querySelector('[data-cxcs]').classList.contains('is-ready')", timeout=10000)
+        # Polled with evaluate: wait_for_function's polling needs eval, which the page's CSP blocks.
+        for _ in range(100):
+            if page.evaluate("document.querySelector('[data-cxcs]').classList.contains('is-ready')"):
+                break
+            page.wait_for_timeout(100)
+        else:
+            raise AssertionError('CREATIVE SOLUTION never got ready')
     page.wait_for_timeout(300)
     return page
 

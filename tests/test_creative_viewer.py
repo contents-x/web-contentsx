@@ -299,6 +299,18 @@ with sync_playwright() as p:
     page.context.close()
     report.append('3D phone, reduced motion: straight on at once, player shown without a fade')
 
+    # ---------- the room behind the work: a picture per format (2026-11-20) ----------
+    ROOM = "(async () => { const bg = getComputedStyle(document.querySelector('.cxwv')).backgroundImage; const m = bg.match(/creative-viewer\\/([\\w-]+\\.webp)/); if (!m) return [bg, 0]; const r = await fetch('/material/service-2026/creative-viewer/' + m[1]); return [m[1], r.status]; })()"
+    for width, height, kind, wid, expect in ((1440, 900, 'manga', 'book', 'manga-backdrop-1672.webp'), (1440, 900, 'video', 'QqRlb_JGaHw', 'video-backdrop-1672.webp'),
+                                             (390, 844, 'manga', 'book', 'manga-backdrop-960.webp'), (390, 844, 'anime', 'V9ZC16hTlZI', 'video-backdrop-960.webp')):
+        page = open_page(browser, width, height)
+        open_work(page, kind, wid)
+        room = page.evaluate(ROOM)
+        assert room == [expect, 200], (width, kind, room)
+        page.keyboard.press('Escape')
+        page.context.close()
+    report.append('room behind the work: manga studio for manga, editing room for anime / video (960px file on phones), pictures load')
+
     # ---------- one viewer for both sections ----------
     page = open_page(browser, 1280, 800)
     page.locator('#works .cxw-open').click()
