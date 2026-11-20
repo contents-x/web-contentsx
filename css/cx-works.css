@@ -1,5 +1,6 @@
 /* cxWorks viewer dialog (js/cx-works.js): the one work viewer of the Creative X landing (WORKS and
-   01 CREATIVE SOLUTION). Shared: dark backdrop, kind + title, close button, fade and rise in / fade out,
+   01 CREATIVE SOLUTION). Shared: a room behind the work (a picture per format, below), kind + title, close
+   button, fade and rise in / fade out,
    the loading and error texts of the reader and player, no page scroll behind.
    The view differs by format:
      MANGA          an open book floating on the backdrop (css/cx-manga-book.css)
@@ -10,10 +11,16 @@
    The reader (.cxmr) and the player (.cxvp) keep their styles from home-creative-x.css; this file sizes
    them through the variables they read: --cxcx-manga-h (page height), --cxcx-view-h (video height). */
 html.cxwv-lock { overflow:hidden; scrollbar-gutter:stable; }
-.cxwv { position:fixed; inset:0; z-index:10050; display:grid; place-items:center; padding:clamp(12px,3vw,40px); background:rgba(6,13,36,.95); color:var(--cx-color-white); opacity:0; overscroll-behavior:contain; transition:opacity .2s ease; }
+.cxwv { --cxwv-room:none; position:fixed; inset:0; z-index:10050; display:grid; place-items:center; padding:clamp(12px,3vw,40px); color:var(--cx-color-white); opacity:0; overscroll-behavior:contain; transition:opacity .2s ease;
+  background:linear-gradient(180deg,rgba(6,13,36,.62) 0,rgba(6,13,36,.14) 24%,rgba(6,13,36,.1) 70%,rgba(6,13,36,.5) 100%),var(--cxwv-room) var(--cxwv-room-x,center) center / cover no-repeat,#060d24; }
 .cxwv[hidden] { display:none; }
-/* The page behind stays as a dim, soft shape only (the dialog is static, so the blur is drawn once). */
-@supports (backdrop-filter:blur(1px)) { .cxwv { backdrop-filter:blur(6px); } }
+/* The room behind the work (2026-11-20): a manga studio for manga, an editing room for anime / video
+   (material/service-2026/creative-viewer/, 1672px wide; 960px on phones). The pictures keep their middle
+   empty for the book or the phone; the shade above keeps the kind and title readable over the window light.
+   The dialog is opaque, so the page behind is not drawn and needs no blur. Until the picture arrives, the
+   navy under it shows. */
+.cxwv[data-kind="manga"] { --cxwv-room:url("/material/service-2026/creative-viewer/manga-backdrop-1672.webp"); }
+.cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-room:url("/material/service-2026/creative-viewer/video-backdrop-1672.webp"); }
 .cxwv.is-open { opacity:1; }
 .cxwv.is-closing { opacity:0; pointer-events:none; }
 .cxwv-panel { z-index:1; --cxcx-view-h:min(56.25cqw,calc(100svh - 170px)); --cxcx-manga-h:calc(100svh - 170px); position:relative; display:flex; flex-direction:column; width:min(1320px,100%); max-height:100%; transform:translateY(14px) scale(.98); transition:transform .35s var(--cx-motion-ease); }
@@ -65,7 +72,10 @@ html.cxwv-lock { overflow:hidden; scrollbar-gutter:stable; }
 
 /* Phones: no phone inside the phone. The frame thins to a bezel and the screen becomes 16:9, edge to edge. */
 @media (max-width:768px) {
-  .cxwv { padding:0; background:#060d24; }
+  .cxwv { padding:0; }
+  /* Portrait screens see a slice of the picture: the side with the desk, the storyboards / the monitor. */
+  .cxwv[data-kind="manga"] { --cxwv-room:url("/material/service-2026/creative-viewer/manga-backdrop-960.webp"); --cxwv-room-x:22%; }
+  .cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-room:url("/material/service-2026/creative-viewer/video-backdrop-960.webp"); --cxwv-room-x:12%; }
   .cxwv-panel,.cxwv:is([data-kind="anime"],[data-kind="video"]) .cxwv-panel { --cxcx-view-h:56.25cqw; --cxcx-manga-h:min(141cqw,calc(100svh - 210px)); width:100%; height:100%; max-height:none; padding:12px 12px max(12px,env(safe-area-inset-bottom)); overflow-y:auto; }
   .cxwv-body { display:flex; flex:1 0 auto; flex-direction:column; justify-content:center; }
   .cxwv:is([data-kind="anime"],[data-kind="video"]) { --cxwv-bezel:7px; --cxwv-w:calc(100vw - 24px); --cxwv-screen-h:calc((var(--cxwv-w) - 2 * var(--cxwv-bezel)) * 9 / 16); }
