@@ -4,11 +4,18 @@
      1. The WordPress slot `cx-creative-hero` (cxWorks.slot, js/cx-works.js): up to three MP4s from the
         WordPress media library (cms.contentsx.jp/wp-content/uploads, ASCII file names), played in
         WordPress order and round again (one video loops); the first card's `thumb` becomes the poster.
-     2. The slot is empty (200, no items: nothing chosen in WordPress), fails or answers later than WP_WAIT:
-        `data-sources` (tools/build-services.py from data/service-groups.json heroMedia.videos, the site's
-        own reel, none today), else the poster stays with the same scroll effect. No other work is used.
-     3. The slot is missing (404, a WordPress without the Creative X slots yet): the older place,
-        「CREATIVE X ビューワー動画」 rows of type `data-wp-type` (creative_hero) with an .mp4, then 2.
+     2. The slot is missing (404, a WordPress without the Creative X slots yet), or empty while
+        WP_CONFIG.creativeXLegacyFallback is on (the move to WordPress; cxWorks.useOlder, the same rule as
+        WORKS): the older place, 「CREATIVE X ビューワー動画」 rows of type `data-wp-type` (creative_hero)
+        with an .mp4, then 3.
+     3. Empty with the switch off (nothing chosen in WordPress), failed, nothing playable, or no answer
+        within WP_WAIT: `data-sources` (tools/build-services.py from data/service-groups.json
+        heroMedia.videos, the site's own reel, none today), else the poster stays with the same scroll
+        effect. No other work is used.
+   The poster shows from the start. WordPress may answer late: whatever arrives within WP_WAIT is used then,
+   and the video fades in over the poster once it really plays (.is-playing); after WP_WAIT the answer is
+   ignored. Played muted and inline (what phones, the iPhone included, allow without a tap); if the browser
+   still refuses (iPhone Low Power Mode, a browser setting) the poster stays and it is not tried again.
    Scroll (passive listener + one rAF): the copy fades and rises, its shade goes with it; the picture blurs
    (clear glass, not a navy fill: a light veil, a glass sheen, a little more colour) and zooms a little until
    WORKS reaches the top, then stays like that to the end of the stage, a little calmer (more veil) behind
@@ -30,7 +37,8 @@
 
   var LOCAL = /^\/material\/[\w\/-]+\.(?:mp4|webm)$/;
   var REMOTE = /^https:\/\/cms\.contentsx\.jp\/wp-content\/uploads\/[\w\/.-]+\.(?:mp4|webm)$/;
-  var WP_WAIT = 2500;   // the poster is already showing; do not hold the video longer for WordPress
+  // ms: the longest the HERO waits for WordPress (the slot, then the older list). The poster shows meanwhile.
+  var WP_WAIT = 10000;
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   var narrow = window.matchMedia('(max-width: 768px)');
   // Tuned on the real poster and video: a clear blur that keeps the picture's colour and light.
@@ -90,8 +98,18 @@
   function playback() {
     if (!hasVideo) return;
     var run = live && inView && !viewerOpen && !userPaused && !still && !document.hidden;
-    if (run && video.paused) video.play().catch(function () {});
-    else if (!run && !video.paused) video.pause();
+    if (run && video.paused) {
+      var p = video.play();
+      if (p && p.catch) p.catch(refused);
+    } else if (!run && !video.paused) video.pause();
+  }
+  /** play() was refused: this browser does not let a video start by itself here (iPhone Low Power Mode, a
+      browser setting). The poster stays and it is not tried again. An AbortError (paused before play()
+      settled, e.g. a quick scroll) is not a refusal. */
+  function refused(e) {
+    if (!hasVideo || !e || e.name !== 'NotAllowedError') return;
+    console.warn('[Creative X HERO] the browser does not allow the background video to start by itself: the poster stays.');
+    fail();
   }
   function staticSources() {
     try {
@@ -123,9 +141,11 @@
   }
   function fail() {
     hasVideo = false;
+    reelList = [];
     reel.classList.remove('is-playing');
     toggle.hidden = true;
     video.removeAttribute('src');
+    video.load();                                // stops any download; with no source, no error event
   }
   /* Up to three videos play in turn (WordPress order) and the list starts again; one video loops.
      A file that cannot be played is dropped and the next one plays; with none left, the poster stays. */
@@ -140,17 +160,22 @@
     if (!reelList.length) return;
     reelAt = 0;
     hasVideo = true;
+    // Muted and inline: what lets a video start without a tap (the attributes are in the HTML; set again here).
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
     video.addEventListener('playing', function () {
-      if (reduced.matches) return;
+      if (reduced.matches || !hasVideo) return;
       reel.classList.add('is-playing');
       toggle.hidden = false;
     });
     video.addEventListener('ended', function () {
-      if (reelList.length < 2) return;
+      if (!hasVideo || reelList.length < 2) return;
       reelAt = (reelAt + 1) % reelList.length;
       cue();
     });
     video.addEventListener('error', function () {
+      if (!hasVideo) return;
       reelList.splice(reelAt, 1);
       if (!reelList.length) { fail(); return; }
       reelAt %= reelList.length;
@@ -174,25 +199,39 @@
   function load() {
     if (requested || quiet()) return;
     requested = true;
-    var fallback = function () { start([pick(staticSources())]); };
+    // The video is chosen once: the first of a WordPress answer (within WP_WAIT) or the end of WP_WAIT.
+    var chosen = false, timer = 0;
+    function choose(list, poster) {
+      if (chosen) return;
+      chosen = true;
+      clearTimeout(timer);
+      if (poster) usePoster(poster);
+      start(list);
+    }
+    var fallback = function () { choose([pick(staticSources())]); };
     var wp = typeof WP_CONFIG !== 'undefined' && WP_CONFIG.enabled !== false && WP_CONFIG.apiBase && window.cxDom && window.cxWorks;
     if (!wp) { fallback(); return; }
-    var late = new Promise(function (resolve) { setTimeout(function () { resolve({ state: 'late', items: [] }); }, WP_WAIT); });
-    Promise.race([window.cxWorks.slot('cx-creative-hero'), late]).then(function (res) {
+    timer = setTimeout(function () {
+      if (chosen) return;
+      console.warn('[Creative X HERO] WordPress did not answer within ' + WP_WAIT / 1000 + 's: no WordPress video this time.');
+      fallback();
+    }, WP_WAIT);
+    window.cxWorks.slot('cx-creative-hero').then(function (res) {
+      if (chosen) return;
       if (res.state === 'ok') {
         // Only MP4s in the WordPress media library (the slot sends no other kind), in WordPress order.
         var list = res.items.filter(function (it) { return it.media && REMOTE.test(it.media.src) && (!video.canPlayType || video.canPlayType('video/mp4')); }).slice(0, 3);
-        if (list.length) { usePoster(list[0].poster); start(list.map(function (it) { return it.media.src; })); return; }
+        if (list.length) { choose(list.map(function (it) { return it.media.src; }), list[0].poster); return; }
       }
-      if (res.state === 'missing' && reel.getAttribute('data-wp-type')) {
-        // A WordPress without the Creative X slots yet: the older place (the WORKS fallback asks for the same list).
+      if (window.cxWorks.useOlder(res) && reel.getAttribute('data-wp-type')) {
+        // No slot yet, or empty during the move: the older place (the WORKS fallback asks for the same list).
         window.cxDom.getJSON('/bizanime-videos', 8000, 'Creative X HERO').then(function (d) {
           var src = pick(wpSources(d));
-          if (src) start([src]); else fallback();
+          if (src) choose([src]); else fallback();
         });
         return;
       }
-      fallback();     // empty (nothing set in WordPress), failed or late: the poster, or the site's own reel
+      fallback();     // empty (switch off), failed or nothing playable: the poster, or the site's own reel
     });
   }
 

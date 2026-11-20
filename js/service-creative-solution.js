@@ -7,9 +7,11 @@
    - Empty slot (200, no items): nothing is chosen. The card keeps its link to the service and says
      「作品は準備中です」. Another work is never put in its place.
    - Failure (network, time-out, 5xx): the card keeps its link and says 「作品を読み込めませんでした」.
-   - 404 (a WordPress without the Creative X slots yet): the work named by data-work-id (written by
-     tools/build-services.py from data/creative-solution.json) in the older lists (cxWorks.load); if it is
-     not there, the card says so — again no stand-in work. No placeholder work is ever shown.
+   - While WP_CONFIG.creativeXLegacyFallback is on (the move to WordPress, cxWorks.keepOlder) the slots are
+     not read, and after that for a 404 (a WordPress without the slot): the work named by data-work-id
+     (written by tools/build-services.py from data/creative-solution.json) in the older lists
+     (cxWorks.load); if it is not there, the card says so — again no stand-in work. No placeholder work is
+     ever shown.
    Backdrop: alone, the section sits on a CSS-only dark backdrop. When the page has the HERO showreel
    (css/service-creative-hero.css, other branch), its poster image is reused here, blurred and darker, so the
    HERO picture carries on without a second video. Inside the HERO stage (.cxg-stage) the section turns
@@ -130,9 +132,10 @@
   }
   Promise.all(cards.map(function (card) {
     var kind = card.getAttribute('data-kind');
+    if (window.cxWorks.keepOlder()) return older(card, kind);       // during the move: the named work, slot not read
     return window.cxWorks.slot('cx-creative-solution-' + kind).then(function (res) {
       if (res.state === 'ok') { fill(card, res.items[0]); return null; }
-      if (res.state === 'missing') return older(card, kind);
+      if (window.cxWorks.useOlder(res)) return older(card, kind);    // 404: a WordPress without the slot
       unavailable(card, res.state === 'error');
       return null;
     });

@@ -5,10 +5,11 @@
    Data: the WordPress slot `cx-creative-works` (cxWorks.slot, js/cx-works.js; the same item shape as
    01 CREATIVE SOLUTION). ALL keeps WordPress's order; MANGA / ANIME / VIDEO keep it too, by `format_key`.
    Empty slot (200, no items): 「作品は準備中です」 and the static links. Failure (network, time-out, 5xx):
-   「作品を読み込めませんでした」 and the static links. 404 (a WordPress without the Creative X slots yet):
-   the older lists (cxWorks.load: /works?site=contentsx and /bizanime-videos), whose ALL mixes the kinds
-   round-robin in the order of the section's `data-cxw-mix` (default "manga,anime,video"). Nothing is
-   written as HTML.
+   「作品を読み込めませんでした」 and the static links. While WP_CONFIG.creativeXLegacyFallback is on (the move
+   to WordPress, cxWorks.keepOlder) the slot is not read at all, and after that for a 404 (a WordPress
+   without the slot): the older lists (cxWorks.load: /works?site=contentsx and /bizanime-videos), whose ALL mixes the kinds
+   round-robin in the order of the section's `data-cxw-mix` (default "manga,anime,video"). The slot's works
+   and the older lists are never mixed. Nothing is written as HTML.
    Open: the big picture, 「マンガを読む / 動画を見る」 or Enter in the strip open the work in the page's one
    work viewer, cxWorks.open (js/cx-works.js; 03 CREATIVE SOLUTION uses the same): manga as a book with
    BizManga's page flip, video on a phone lying on its side. Choosing a work never plays anything. Closing
@@ -401,8 +402,11 @@
     });
   }
   gallery.setAttribute('aria-busy', 'true');
-  window.cxWorks.slot('cx-creative-works').then(function (res) {
-    if (res.state === 'missing') { older(); return; }
+  // During the move (WP_CONFIG.creativeXLegacyFallback on) the slot is not read: works being registered in
+  // WordPress never change the page until an admin turns the switch off.
+  if (window.cxWorks.keepOlder()) older();
+  else window.cxWorks.slot('cx-creative-works').then(function (res) {
+    if (window.cxWorks.useOlder(res)) { older(); return; }    // 404: a WordPress without the slot
     if (res.state === 'error') { fail(FAILED); return; }
     if (res.state === 'empty') { fail(EMPTY); return; }
     show(res.items.slice(), byKind(res.items), '');
