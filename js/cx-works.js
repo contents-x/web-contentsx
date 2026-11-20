@@ -14,12 +14,21 @@
                 (cxWorks.load) so the page still works. Not a finished state: check the real API after release.
        error    network error, time-out, 5xx or an answer without `items`: the sections keep their own
                 failure look (the static links in the HTML), distinct from "empty"
+     The move to WordPress (SPEC.md §3.0) — one switch, WP_CONFIG.creativeXLegacyFallback (js/wp-config.js):
+       on (during the move)  cxWorks.keepOlder() is true: WORKS and the CREATIVE SOLUTION picks do not read
+                             their slots at all and show the older lists, however many works WordPress holds
+                             there, so registering works one by one never changes the page. The HERO still
+                             reads its slot (MP4s set there play); missing or empty → its older place.
+       off (switched)        every section shows its slot: WordPress's works and order; empty is shown as empty.
+       Turning it back on is the way back. cxWorks.useOlder(res) is the rule for a slot answer: 404 always
+       means the older lists (a WordPress without the slots); empty only while the switch is on. A section
+       shows either its slot or the older lists, never both.
      Keys: cx-creative-hero (MP4s for the HERO, ≤3, in play order), cx-creative-works (WORKS, manga and
      video mixed; `format_key` manga / anime / video), cx-creative-solution-{manga,anime,video} (≤1 each).
      A card becomes the item below (fromCard): manga reads `manga.gallery` / `manga.view_type` (the reader's
      work, no /manga/{id} call); video reads `video.provider` / `video_id` / `src`, and `file` (a WordPress
      media MP4) plays as `mp4` with `src`. Cards that cannot be shown or played are left out (warning).
-   Older lists (the 404 transition only) — cxWorks.load() asks WordPress once per page and resolves to
+   Older lists (during the move, and for a 404) — cxWorks.load() asks WordPress once per page and resolves to
      { manga: [...], anime: [...], video: [...], failed: { works: bool, videos: bool } }
      manga  GET /works?site=contentsx — works that have pages (`gallery`), in WordPress order
      anime  GET /bizanime-videos — `viewer` rows of type bizanime → `cases` (YouTube) → `playlists` of type bizanime
@@ -200,10 +209,25 @@
       if (!r.data || !Array.isArray(r.data.items)) return { state: 'error', items: [] };
       var items = r.data.items.map(fromCard).filter(Boolean);
       if (items.length < r.data.items.length) console.warn('[Creative X] ' + (r.data.items.length - items.length) + ' card(s) of "' + key + '" cannot be shown here and were left out.');
+      if (!items.length && migrating()) console.warn('[Creative X] WordPress slot "' + key + '" is empty; WP_CONFIG.creativeXLegacyFallback is on, so the older place is used.');
       return { state: items.length ? 'ok' : 'empty', items: items };
     });
     return slots[key];
   }
+  /** The move to WordPress: js/wp-config.js creativeXLegacyFallback (true until an admin switches to the slots). */
+  function migrating() { return typeof WP_CONFIG !== 'undefined' && WP_CONFIG.creativeXLegacyFallback === true; }
+  /** WORKS and the picks: keep the older lists and do not read the slots (the switch is on). */
+  var noted = false;
+  function keepOlder() {
+    var on = migrating();
+    if (on && !noted) {
+      noted = true;
+      console.info('[Creative X] WP_CONFIG.creativeXLegacyFallback is on: WORKS and CREATIVE SOLUTION show the older lists; their WordPress slots are not read until it is turned off.');
+    }
+    return on;
+  }
+  /** Should a section use the older lists for this slot answer? 404 always; empty only during the move. */
+  function useOlder(res) { return !!res && (res.state === 'missing' || (res.state === 'empty' && migrating())); }
   /** The 3D phone draws its screen in WebGL, which needs CORS: YouTube's stills and this site (GitHub Pages
       sends Access-Control-Allow-Origin: *) have it; WordPress uploads do not (2026-11). '' = no picture. */
   var GL_HOSTS = ['i.ytimg.com', 'contentsx.jp', 'www.contentsx.jp'];
@@ -410,7 +434,7 @@
   }, true);
 
   window.cxWorks = {
-    slot: slot, load: load, find: find, poster: poster, open: open, close: close, warm: warm,
+    slot: slot, keepOlder: keepOlder, useOlder: useOlder, load: load, find: find, poster: poster, open: open, close: close, warm: warm,
     isOpen: function () { return !!dialog && !dialog.hidden && !dialog.classList.contains('is-closing'); }
   };
 })();
